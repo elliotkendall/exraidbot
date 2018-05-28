@@ -1,0 +1,18 @@
+{
+  "channels_to_watch": [
+    "#exclusive_raid_meetups"
+  ],
+  "top_image": "invitationwide.png",
+  "bottom_image": "passline.png",
+  "roles_for_new_channels": [
+    "admin",
+    "mod"
+  ],
+  "old_channel_grace_days": 3,
+  "messages": {
+    "date_in_past": "It looks like that raid already happened, so I'm not going to process it. Please contact an admin if that's incorrect.",
+    "could_not_parse": "Could not determine all the necessary information from the image. Please make sure you're posting an uncropped screenshot of your invitation.",
+    "channel_add_error": "Something went wrong adding you to the channel. Sorry about that.",
+    "channel_create_error": "Something went wrong creating the channel. Sorry about that."
+  }
+}

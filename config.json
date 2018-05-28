@@ -1,0 +1,8 @@
+{
+  "token": "",
+  "bot": {
+    "plugins": [
+      "plugins.exraidplugin"
+    ]
+  }
+}
