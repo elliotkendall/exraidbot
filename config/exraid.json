@@ -2,8 +2,8 @@
   "channels_to_watch": [
     "#exclusive_raid_meetups"
   ],
-  "top_image": "invitationwide.png",
-  "bottom_image": "passline.png",
+  "top_image": "top.png",
+  "bottom_image": "bottom.png",
   "roles_for_new_channels": [
     "admin",
     "mod"
