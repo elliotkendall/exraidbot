@@ -60,3 +60,14 @@ Once you've configured everything, run the following command from the
 directory with all the exraidbot files:
 
 `python -m disco.cli --config config.json`
+
+## Using Docker
+
+If you prefer, you can run the bot out of a Docker container.  Edit the
+local config files as described above, then build the image:
+
+`docker build -t exraidbot .`
+
+And run it:
+
+`docker run exraidbot`
