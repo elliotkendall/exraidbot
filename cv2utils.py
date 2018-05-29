@@ -5,14 +5,16 @@ import sys
 import math
 import urllib
 
+class CustomUserAgentURLopener(urllib.FancyURLopener):
+  version = 'Mozilla/5.0'
+
 class cv2utils:
   # From https://www.pyimagesearch.com/2015/03/02/convert-url-to-image-with-pyth
   @staticmethod
   def urlToImage(url):
-    resp = urllib.urlopen(url)
-    print resp.r
-    image = np.array(bytearray(resp.read()), dtype="uint8")
-    print image
+    uo = CustomUserAgentURLopener()
+    resp = uo.open(url)
+    image = np.asarray(bytearray(resp.read()), dtype="uint8")
     image = cv2.imdecode(image, cv2.IMREAD_COLOR)
     return image
 
