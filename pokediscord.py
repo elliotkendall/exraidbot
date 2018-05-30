@@ -2,6 +2,7 @@ import calendar
 import datetime
 import dateutil.parser
 import re
+import pokeocr
 
 class pokediscord:
   @staticmethod
@@ -10,19 +11,26 @@ class pokediscord:
     exChannelRE = re.compile('^([0-9]{1,2})-([0-9]{1,2})_ex_([a-z]+)_(.*)')
     match = exChannelRE.match(cname)
     if match:
-      ret = exRaidData()
+      ret = pokeocr.exRaidData()
       ret.month = match.group(1)
       ret.day = match.group(2)
       ret.city = match.group(3)
       ret.location = match.group(4)
+      ret.begin = '9:00 AM'
+      ret.end = '9:45 AM'
       return ret
     return None
+
+  @staticmethod
+  def generateCategoryName(raidInfo):
+    date = str(list(calendar.month_name).index(raidInfo.month)) + '-' + raidInfo.day
+    return 'ex_raids_' + date
 
   @staticmethod
   def generateChannelName(raidInfo):
     commonLocations = ['Starbucks', 'Find shiny deals at Sprint']
 
-    date = str(list(calendar.month_abbr).index(raidInfo.month)) + '-' + raidInfo.day
+    date = str(list(calendar.month_name).index(raidInfo.month)) + '-' + raidInfo.day
     city = ''
     for i in raidInfo.city.lower().split():
       city += i[0]
