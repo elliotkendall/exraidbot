@@ -15,6 +15,6 @@
     "user_already_in_channel": "It looks like you're already in that channel.",
     "channel_add_error": "Something went wrong adding you to the channel. Sorry about that.",
     "channel_create_error": "Something went wrong creating the channel. Sorry about that.",
-    "added_success": "Added you to channel #"
+    "added_success": "Added you to channel:"
   }
 }
