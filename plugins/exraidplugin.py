@@ -48,6 +48,8 @@ class ExRaidPlugin(Plugin):
     return begin - now
 
   def purgeOldChannels(self, channels):
+    if self.config.old_channel_grace_days == -1:
+      return None
     for channel in channels.values():
       date = pokediscord.channelNameToDate(channel.name)
       if not date:

@@ -46,7 +46,7 @@ Edit config/exraid.json and customize the settings to your liking.
   manually tweak the channels.
 
 - **old_channel_grace_days**: How many days after a raid is over that its
-  channel should stick around
+  channel should stick around. Set this to -1 to disable expiration.
 
 - **messages**: The messages that the bot will respond with in various
   situations.
