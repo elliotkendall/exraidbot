@@ -5,6 +5,7 @@ from disco.types.permissions import PermissionValue, Permissions
 import cv2
 import datetime
 import re
+import dateutil.parser
 
 from pokeocr import pokeocr
 from pokediscord import pokediscord
@@ -40,12 +41,18 @@ class ExRaidPlugin(Plugin):
         return role
     return None
 
+  @staticmethod
+  def dateDiff(datestring):
+    begin = dateutil.parser.parse(datestring)
+    now = datetime.datetime.today()
+    return begin - now
+
   def purgeOldChannels(self, channels):
     for channel in channels.values():
-      raidInfo = pokediscord.parseChannelName(channel.name)
-      if not raidInfo:
+      date = pokediscord.channelNameToDate(channel.name)
+      if not date:
         continue
-      if pokediscord.dateDiff(raidInfo).days < -self.config.old_channel_grace_days:
+      if self.dateDiff(date).days < -self.config.old_channel_grace_days:
         channel.delete()
 
   @Plugin.listen('MessageCreate')
@@ -56,7 +63,7 @@ class ExRaidPlugin(Plugin):
         try:
           image = cv2utils.urlToImage(value.url)
           raidInfo = self.ocr.scanExRaidImage(image, self.top, self.bottom)
-          if pokediscord.dateDiff(raidInfo).days < 0:
+          if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin).days < 0:
             event.reply(self.config.messages['date_in_past'])
             continue          
           cname = pokediscord.generateChannelName(raidInfo)

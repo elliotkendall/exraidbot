@@ -1,24 +1,21 @@
 import calendar
 import datetime
-import dateutil.parser
 import re
 import pokeocr
 
 class pokediscord:
   @staticmethod
-  def parseChannelName(cname):
+  def channelNameToDate(cname):
     # 5-28_ex_sf_mission_creek_park
-    exChannelRE = re.compile('^([0-9]{1,2})-([0-9]{1,2})_ex_([a-z]+)_(.*)')
+    exChannelRE = re.compile('^([0-9]{1,2}-[0-9]{1,2})_ex_')
     match = exChannelRE.match(cname)
     if match:
-      ret = pokeocr.exRaidData()
-      ret.month = match.group(1)
-      ret.day = match.group(2)
-      ret.city = match.group(3)
-      ret.location = match.group(4)
-      ret.begin = '9:00 AM'
-      ret.end = '9:45 AM'
-      return ret
+      return match.group(1)
+    # ex_raids_5-28
+    exCategoryRE = re.compile('^ex_raids_([0-9]{1,2}-[0-9]{1,2})')
+    match = exCategoryRE.match(cname)
+    if match:
+      return match.group(1)
     return None
 
   @staticmethod
@@ -42,9 +39,3 @@ class pokediscord:
       location += '_' + datetime.datetime.strftime(begin, "%H:%M")
     channel =  date + '_ex_' + city + '_' + location
     return channel
-
-  @staticmethod
-  def dateDiff(raidInfo):
-    begin = dateutil.parser.parse(raidInfo.month + ' ' + raidInfo.day + ' ' + raidInfo.begin)
-    now = datetime.datetime.today()
-    return begin - now
