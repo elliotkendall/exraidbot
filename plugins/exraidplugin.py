@@ -65,6 +65,10 @@ class ExRaidPlugin(Plugin):
         return True
     return False
 
+  @staticmethod
+  def atReply(event, text):
+    event.reply('<@' + str(event.message.author.id) + '> ' + text)
+
   @Plugin.listen('MessageCreate')
   def on_message_create(self, event):
     if not str(event.channel) in self.config.channels_to_watch:
@@ -76,12 +80,12 @@ class ExRaidPlugin(Plugin):
         image = cv2utils.urlToImage(value.url)
         raidInfo = self.ocr.scanExRaidImage(image, self.top, self.bottom)
         if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin).days < 0:
-          event.reply(self.config.messages['date_in_past'])
+          self.atReply(event, self.config.messages['date_in_past'])
           continue
         cname = pokediscord.generateChannelName(raidInfo)
         catname = pokediscord.generateCategoryName(raidInfo)
       except Exception:
-        event.reply(self.config.messages['could_not_parse'])
+        self.atReply(event, self.config.messages['could_not_parse'])
         continue
 
       # Create the category if it doesn't exist
@@ -100,20 +104,20 @@ class ExRaidPlugin(Plugin):
             role = self.getRoleByName(rname, event.guild)
             channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
         except Exception:
-          event.reply(self.config.messages['channel_create_error'])
+          self.atReply(event, self.config.messages['channel_create_error'])
           continue
 
       # Is the user already in the channel?
       if self.userInChannel(event.message.author, channel):
-        event.reply(self.config.messages['user_already_in_channel'])
+        self.atReply(event, self.config.messages['user_already_in_channel'])
         continue
 
       # Add the user to the channel
       try:
         channel.create_overwrite(event.message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
-        event.reply('Added ' + event.message.author.username + ' to channel #' + cname)
+        self.atReply(event, self.config.messages['added_success'] + cname)
       except Exception:
-        event.reply(self.config.messages['channel_add_error'])
+        self.atReply(event, self.config.messages['channel_add_error'])
         continue
 
       # Purge old channels
