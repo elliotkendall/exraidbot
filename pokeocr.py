@@ -11,7 +11,7 @@ class pokeocr:
   def __init__(self):
     self.tool = pyocr.get_available_tools()[0]
     self.lang = self.tool.get_available_languages()[0]
-    self.dateTimeRE = re.compile('^([A-Z][a-z]+) ([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} [AP]M) .+ ([0-9]{1,2}:[0-9]{2} [AP]M)$')
+    self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} [AP]M) .+ ([0-9]{1,2}:[0-9]{2} [AP]M)$')
     self.cityRE = re.compile('(.*)[,.‘] (CA|California). United States')
 
   @staticmethod
