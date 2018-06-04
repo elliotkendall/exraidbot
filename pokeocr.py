@@ -22,7 +22,7 @@ class pokeocr:
 
     # We want to return True/False, but we need to know the correct offset
     # if it's False. There's probably a better way to do this...
-    if diff < (width * .01):
+    if diff > (width * .015):
       return offset
     else:
       return True
@@ -34,11 +34,11 @@ class pokeocr:
     # Run the scaling matcher to find the template, then sanity check the
     # match
     ((b_startX, b_startY), (b_endX, b_endY)) = cv2utils.scalingMatch(top, image)
-    val = self.isMatchCentered(width, b_startX, b_startY)
+    val = self.isMatchCentered(width, b_startX, b_endX)
     if val != True:
       raise Exception('Top template match not centered. Starts at ' + str(b_startX) + ', should be ' + str(val))
     ((t_startX, t_startY), (t_endX, t_endY)) = cv2utils.scalingMatch(bottom, image)
-    val = self.isMatchCentered(width, t_startX, t_startY)
+    val = self.isMatchCentered(width, t_startX, t_endX)
     if val != True:
       raise Exception('Bottom template match not centered. Starts at ' + str(t_startX) + ', should be ' + str(val))
 
