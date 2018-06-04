@@ -1,0 +1,12 @@
+#
+# Python dependencies for running exraidbot
+#
+# Usage:
+#   pip install -r requirements.txt
+#
+opencv-python-headless
+numpy
+imutils
+python-dateutil
+pyocr
+disco-py

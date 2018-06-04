@@ -11,12 +11,15 @@ channels next time it runs.
 Make sure you have the necessary Python modules.  You can fetch them all
 with pip:
 
-`pip install opencv-python-headless numpy imutils python-dateutil pyocr disco-py`
+`pip install -r requirements.txt`
 
 You will also need libtesseract with English OCR support.  On a Debian-like
 distribution, you can get those with:
 
 `apt install libtesseract3 tesseract-ocr-eng`
+
+For other platforms, consult the tesseract-ocr downloads page at
+https://github.com/tesseract-ocr/tesseract/wiki/Downloads
 
 ## Discord Configuration
 
