@@ -74,3 +74,8 @@ local config files as described above, then build the image:
 And run it:
 
 `docker run exraidbot`
+
+## Discord Server
+
+If you'd like to chat, you can stop by the Discord server I'm using to test
+and develop the bot. Here's an invite link: https://discord.gg/2yfq5yk
