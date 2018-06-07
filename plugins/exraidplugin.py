@@ -8,7 +8,7 @@ import datetime
 import re
 import dateutil.parser
 
-from pokeocr import pokeocr
+import pokeocr
 from pokediscord import pokediscord
 from cv2utils import cv2utils
 
@@ -21,7 +21,7 @@ class ExRaidPlugin(Plugin):
     super(ExRaidPlugin, self).load(ctx)
     self.top = cv2.imread(self.config.top_image)
     self.bottom = cv2.imread(self.config.bottom_image)
-    self.ocr = pokeocr()
+    self.ocr = pokeocr.pokeocr()
     self.exChannelRE = re.compile('^([0-9]{1,2})-([0-9]{1,2})_ex_')
 
   @staticmethod
@@ -84,6 +84,15 @@ class ExRaidPlugin(Plugin):
           continue
         cname = pokediscord.generateChannelName(raidInfo)
         catname = pokediscord.generateCategoryName(raidInfo)
+      except pokeocr.MatchNotCenteredException:
+        self.atReply(event, self.config.messages['match_not_centered'])
+        continue
+      except pokeocr.TooFewLinesException:
+        self.atReply(event, self.config.messages['too_few_lines'])
+        continue
+      except pokeocr.InvalidCityException:
+        self.atReply(event, self.config.messages['invalid_city'])
+        continue
       except Exception:
         self.atReply(event, self.config.messages['could_not_parse'])
         continue
