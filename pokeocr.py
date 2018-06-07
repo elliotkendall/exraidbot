@@ -26,8 +26,9 @@ class pokeocr:
   def __init__(self):
     self.tool = pyocr.get_available_tools()[0]
     self.lang = self.tool.get_available_languages()[0]
-    self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} [AP]M) .+ ([0-9]{1,2}:[0-9]{2} [AP]M)')
-    self.cityRE = re.compile('(.*). (CA|California). United Sta[it]es')
+    self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
+    self.cityRE = re.compile('(.*). (CA|California). United S[tk]a[ti]es')
+    self.getDirectionsRE = re.compile('Get d[il]rect[il]ons')
 
   @staticmethod
   def isMatchCentered(width, startx, endx):
@@ -59,6 +60,11 @@ class pokeocr:
 
     # Crop the image
     image = image[b_endY:t_startY,b_startX:b_endX]
+
+    # Scale up small images
+    height, width = image.shape[:2]
+    if width < 509:
+      image = cv2.resize(image, (0,0), fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
 
     # Increase contrast. Must be done before grayscale conversion
     image = cv2utils.increaseContrast(image)
@@ -94,7 +100,8 @@ class pokeocr:
     else:
       raise InvalidCityException('City line did not match: ' + lines[2].encode('utf-8'))
 
-    if lines[3] != 'Get directions':
+    match = self.getDirectionsRE.match(lines[3])
+    if not match:
       raise InvalidGetDirectionsException('Get directions did not match: ' + lines[3].encode('utf-8'))
 
     return ret
