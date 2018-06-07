@@ -9,6 +9,16 @@ class CustomUserAgentURLopener(urllib.FancyURLopener):
   version = 'Mozilla/5.0'
 
 class cv2utils:
+  # From https://stackoverflow.com/questions/19363293/whats-the-fastest-way-to-increase-color-image-contrast-with-opencv-in-python-c/44569460#44569460
+  @staticmethod
+  def increaseContrast(image):
+    clahe = cv2.createCLAHE(clipLimit=3., tileGridSize=(8,8))
+    lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)  # convert from BGR to LAB color space
+    l, a, b = cv2.split(lab)  # split on 3 different channels
+    l2 = clahe.apply(l)  # apply CLAHE to the L-channel
+    lab = cv2.merge((l2,a,b))  # merge channels
+    return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)  # convert from LAB to BGR
+
   # From https://www.pyimagesearch.com/2015/03/02/convert-url-to-image-with-pyth
   @staticmethod
   def urlToImage(url):
