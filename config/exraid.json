@@ -2,8 +2,6 @@
   "channels_to_watch": [
     "#exclusive_raid_meetups"
   ],
-  "top_image": "top.png",
-  "bottom_image": "bottom.png",
   "roles_for_new_channels": [
     "admin",
     "mod"
@@ -20,5 +18,7 @@
     "channel_add_error": "Something went wrong adding you to the channel. Sorry about that.",
     "channel_create_error": "Something went wrong creating the channel. Sorry about that.",
     "added_success": "Added you to channel:"
-  }
+  },
+  "top_image": "top.png",
+  "bottom_image": "bottom.png"
 }
