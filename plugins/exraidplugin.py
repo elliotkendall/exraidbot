@@ -22,7 +22,7 @@ class ExRaidPlugin(Plugin):
     super(ExRaidPlugin, self).load(ctx)
     self.top = cv2.imread(self.config.top_image)
     self.bottom = cv2.imread(self.config.bottom_image)
-    self.ocr = pokeocr.pokeocr()
+    self.ocr = pokeocr.pokeocr(self.config.location_regular_expression)
     self.exChannelRE = re.compile('^([0-9]{1,2})-([0-9]{1,2})_ex_')
 
   @staticmethod

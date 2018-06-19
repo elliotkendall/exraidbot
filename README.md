@@ -48,6 +48,11 @@ Edit config/exraid.json and customize the settings to your liking.
   moderator roles, you might want to list them here to that people can
   manually tweak the channels.
 
+- **location_regular_expression**: A regular expression to match the
+  location line in invites in your area.  For US states other than
+  California, you should just change "(CA|California)" as appropriate for
+  your state, such as "(FL|Florida)".
+
 - **old_channel_grace_days**: How many days after a raid is over that its
   channel should stick around. Set this to -1 to disable expiration.
 

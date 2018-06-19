@@ -23,11 +23,11 @@ class TooFewLinesException(Exception):
   pass
 
 class pokeocr:
-  def __init__(self):
+  def __init__(self, location_regex):
     self.tool = pyocr.get_available_tools()[0]
     self.lang = self.tool.get_available_languages()[0]
     self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
-    self.cityRE = re.compile('(.*). (CA|California). United S[tk]a[ti]es')
+    self.cityRE = re.compile(location_regex)
     self.getDirectionsRE = re.compile('Get d[il]rect[il]ons')
 
   @staticmethod
