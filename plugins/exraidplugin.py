@@ -7,6 +7,7 @@ import cv2
 import datetime
 import re
 import dateutil.parser
+import traceback
 
 import pokeocr
 from pokediscord import pokediscord
@@ -85,15 +86,19 @@ class ExRaidPlugin(Plugin):
         cname = pokediscord.generateChannelName(raidInfo)
         catname = pokediscord.generateCategoryName(raidInfo)
       except pokeocr.MatchNotCenteredException:
+        traceback.print_exc()
         self.atReply(event, self.config.messages['match_not_centered'])
         continue
       except pokeocr.TooFewLinesException:
+        traceback.print_exc()
         self.atReply(event, self.config.messages['too_few_lines'])
         continue
       except pokeocr.InvalidCityException:
+        traceback.print_exc()
         self.atReply(event, self.config.messages['invalid_city'])
         continue
       except Exception:
+        traceback.print_exc()
         self.atReply(event, self.config.messages['could_not_parse'])
         continue
 
@@ -113,6 +118,7 @@ class ExRaidPlugin(Plugin):
             role = self.getRoleByName(rname, event.guild)
             channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
         except Exception:
+          traceback.print_exc()
           self.atReply(event, self.config.messages['channel_create_error'])
           continue
 
@@ -126,6 +132,7 @@ class ExRaidPlugin(Plugin):
         channel.create_overwrite(event.message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
         self.atReply(event, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>')
       except Exception:
+        traceback.print_exc()
         self.atReply(event, self.config.messages['channel_add_error'])
         continue
 
