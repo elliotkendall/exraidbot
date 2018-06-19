@@ -20,4 +20,7 @@ image = cv2.imread(sys.argv[1])
 
 ocr = pokeocr(config['location_regular_expression'])
 
-print ocr.scanExRaidImage(image, top, bottom, True)
+raidInfo = ocr.scanExRaidImage(image, top, bottom)
+
+print raidInfo.__dict__
+print pokediscord.generateChannelName(raidInfo)

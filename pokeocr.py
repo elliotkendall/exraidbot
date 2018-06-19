@@ -43,7 +43,7 @@ class pokeocr:
     else:
       return True
   
-  def scanExRaidImage(self, image, top, bottom):
+  def scanExRaidImage(self, image, top, bottom, debug=False):
     # Find the source image dimensions
     height, width, channels = image.shape
 
@@ -78,6 +78,8 @@ class pokeocr:
     # OCR the text
     txt = self.tool.image_to_string(pil, lang=self.lang, builder=pyocr.builders.TextBuilder())
     lines = txt.split("\n")
+    if debug:
+      return lines
     if len(lines) < 4:
       raise TooFewLinesException('Found fewer lines of text than expected')
 
