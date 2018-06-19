@@ -80,6 +80,23 @@ And run it:
 
 `docker run exraidbot`
 
+## Debugging
+
+I've included a few scripts to help debug problems with your python setup
+and/or individual raid invitation images.
+
+- **ocr.py**: Shows you what the optical character recognition (OCR) library
+  returns for a specific image.  The output should look something like this:
+  `[u'June 5 5:00 PM - 5:45 PM', u'Stern Grove Entrance', u'San Francisco. CA. United States', u'Get directions']`
+
+- **raidinfo.py**: Shows the parsed version of the above, plus the name of
+  the channel we would create.  For example:
+  `{'city': u'San Francisco', 'begin': u'5:00 PM', 'end': u'5:45 PM', 'month': u'June', 'location': u'Stern Grove Entrance', 'day': u'5'}`
+  `6-5_ex_sf_stern_grove_entrance`
+
+- **image.py**: Shows a cropped version of the image including just the part
+  that we would run OCR against.
+
 ## Discord Server
 
 If you'd like to chat, you can stop by the Discord server I'm using to test
