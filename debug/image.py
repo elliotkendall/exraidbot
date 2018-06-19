@@ -1,6 +1,11 @@
 #!/usr/bin/python
 import cv2
 import sys
+import json
+
+from os.path import dirname
+sys.path.append(dirname(dirname(__file__)))
+
 from cv2utils import cv2utils
 
 f = open('config/exraid.json')

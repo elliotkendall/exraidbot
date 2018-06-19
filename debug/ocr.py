@@ -2,6 +2,10 @@
 import cv2
 import sys
 import json
+
+from os.path import dirname
+sys.path.append(dirname(dirname(__file__)))
+
 from cv2utils import cv2utils
 from pokeocr import pokeocr
 from pokediscord import pokediscord
