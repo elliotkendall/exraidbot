@@ -78,6 +78,14 @@ class pokeocr:
     # OCR the text
     txt = self.tool.image_to_string(pil, lang=self.lang, builder=pyocr.builders.TextBuilder())
     lines = txt.split("\n")
+
+    # Sometimes OCR will insert extra empty lines, so let's strip them out
+    newlines = []
+    for i in range(len(lines)):
+      if not len(lines[i]) == 0:
+        newlines.append(lines[i])
+    lines = newlines
+
     if debug:
       return lines
     if len(lines) < 4:
