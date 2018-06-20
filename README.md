@@ -6,7 +6,9 @@ bot will create a channel for the given raid time/location and add the user
 to that channel.  After a specified grace period, the bot will delete old
 channels next time it runs.
 
-## Requirements
+## Installation
+
+### Linux
 
 Make sure you have the necessary Python modules.  You can fetch them all
 with pip:
@@ -18,8 +20,30 @@ distribution, you can get those with:
 
 `apt install libtesseract3 tesseract-ocr-eng`
 
-For other platforms, consult the tesseract-ocr downloads page at
-https://github.com/tesseract-ocr/tesseract/wiki/Downloads
+### Windows
+
+Download and install the latest version of Python 2 from
+https://www.python.org/downloads/.  I used the 2.7.15 x86-64 MSI installer. 
+Make sure to select the "Add python.exe to Path" option.
+
+In the exraidbot directory, run `pip install -r requirements.txt`
+
+Download and run a tesseract installer from
+https://github.com/UB-Mannheim/tesseract/wiki.  I used
+tesseract-ocr-setup-3.05.01.exe.
+
+Add the location of the tesseract.exe file to your PATH.  To do that,
+right-click on your computer icon, select properties, and then select
+Advanced.  Click the Environment Variables...  button.  Under System
+variables, select Path and press Edit...  Select New and enter C:\\Program
+Files (x86)\\Tesseract-OCR, or whatever you installed tesseract.  Press OK
+to exit out of all of the configuration windows.  Re-launch any cmd or other
+command line windows, and try running `tesseract`.  If everything went
+correctly, you should see the tesseract command line usage help.
+
+In my testing, I've been unable to get things working correctly with either
+Cygwin or the libtesseract DLL.  If anyone else figures either of those
+options out, please let me know.
 
 ## Discord Configuration
 
