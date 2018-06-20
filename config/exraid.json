@@ -8,6 +8,7 @@
   ],
   "location_regular_expression": "(.*). (CA|California). United S[tk]a[ti]es",
   "old_channel_grace_days": 3,
+  "include_city_in_channel_names": true,
   "messages": {
     "date_in_past": "It looks like that raid already happened, so I'm not going to process it. Please contact an admin if that's incorrect.",
     "could_not_parse": "Could not determine all the necessary information from the image. Please make sure you're posting an uncropped screenshot of your invitation with no overlays.",

@@ -80,6 +80,10 @@ Edit config/exraid.json and customize the settings to your liking.
 - **old_channel_grace_days**: How many days after a raid is over that its
   channel should stick around. Set this to -1 to disable expiration.
 
+- **include_city_in_channel_names**: Whether or not to include the name of
+  the city in the names of channels we create.  If your Discord covers only
+  a single city, you may wish to set this to false.
+
 - **messages**: The messages that the bot will respond with in various
   situations.
 

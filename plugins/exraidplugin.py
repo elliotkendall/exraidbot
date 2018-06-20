@@ -83,7 +83,7 @@ class ExRaidPlugin(Plugin):
         if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin).days < 0:
           self.atReply(event, self.config.messages['date_in_past'])
           continue
-        cname = pokediscord.generateChannelName(raidInfo)
+        cname = pokediscord.generateChannelName(raidInfo, self.config.include_city_in_channel_names)
         catname = pokediscord.generateCategoryName(raidInfo)
       except pokeocr.MatchNotCenteredException:
         traceback.print_exc()
