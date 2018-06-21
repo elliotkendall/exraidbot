@@ -143,3 +143,12 @@ and/or individual raid invitation images.
 
 If you'd like to chat, you can stop by the Discord server I'm using to test
 and develop the bot. Here's an invite link: https://discord.gg/2yfq5yk
+
+## Who Uses exraidbot?
+
+Here are some Pokemon Go Discord communities that are using exraidbot.
+
+- **SF Pogo Raids Meetup**, San Francisco, California, USA
+
+Please let me know if your community is using exraidbot so I can add you to
+this list.  Thanks.
