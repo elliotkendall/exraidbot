@@ -108,6 +108,20 @@ And run it:
 
 `docker run exraidbot`
 
+## Frequently Asked Questions
+
+### When I run the bot, I see a message about "DeprecationWarning: BaseException.message has been deprecated as of Python 2.6". What does that mean?
+
+You can safely ignore this warning.  It means that the Python tesseract
+bindings are using a feature of the language that's slated to go away in the
+future.
+
+### How can I run the bot in the background?
+
+When you launch the bot, it stays in the foreground.  If you'd like to run
+it in the background, I recommend using the screen program:
+https://www.howtoforge.com/linux_screen
+
 ## Debugging
 
 I've included a few scripts to help debug problems with your python setup
