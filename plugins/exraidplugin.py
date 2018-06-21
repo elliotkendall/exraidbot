@@ -131,6 +131,7 @@ class ExRaidPlugin(Plugin):
       try:
         channel.create_overwrite(event.message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
         self.atReply(event, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>')
+        channel.send_message(self.config.messages['post_add_message'] + ' <@' + str(event.message.author.id) + '>')
       except Exception:
         traceback.print_exc()
         self.atReply(event, self.config.messages['channel_add_error'])
