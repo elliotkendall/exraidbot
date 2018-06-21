@@ -38,7 +38,7 @@ class pokediscord:
     location = raidInfo.location.lower().replace(' ', '_')
     location = re.sub('[^a-z0-9_]', '', location)
     if raidInfo.location in commonLocations:
-      begin = datetime.datetime.strptime(raidInfo.begin, '%I:%M %p')
+      begin = datetime.datetime.strptime(raidInfo.begin, '%I:%M%p')
       location += '_' + datetime.datetime.strftime(begin, "%H%M")
     if useCityName:
       channel =  date + '_ex_' + city + '_' + location

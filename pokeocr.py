@@ -97,8 +97,11 @@ class pokeocr:
     if match:
       ret.month = match.group(1)
       ret.day = match.group(2)
-      ret.begin = match.group(3)
-      ret.end = match.group(4)
+
+      # Sometimes OCR drops the space between the minutes and AM/PM.  Let's
+      # just strip all spaces for consistency
+      ret.begin = match.group(3).replace(' ', '')
+      ret.end = match.group(4).replace(' ', '')
     else:
       raise InvalidDateTimeException('Date/time line did not match: ' + lines[0].encode('utf-8'))
 
