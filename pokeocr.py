@@ -28,7 +28,7 @@ class pokeocr:
     self.lang = self.tool.get_available_languages()[0]
     self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
     self.cityRE = re.compile(location_regex)
-    self.getDirectionsRE = re.compile('Get d[il]rect[il]ons')
+    self.getDirectionsRE = re.compile('Get.*ns')
 
   @staticmethod
   def isMatchCentered(width, startx, endx):
@@ -38,7 +38,7 @@ class pokeocr:
 
     # We want to return True/False, but we need to know the correct offset
     # if it's False. There's probably a better way to do this...
-    if diff > (width * .015):
+    if diff > (width * .02):
       return offset
     else:
       return True
