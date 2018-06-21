@@ -60,6 +60,20 @@ class ExRaidPlugin(Plugin):
         channel.delete()
 
   @staticmethod
+  def alphabetizeChannels(category, channels):
+    subchannels = {}
+    for channel in channels.values():
+      if channel.parent is None:
+        continue
+      if channel.parent.name == category.name:
+        subchannels[channel.name] = channel
+
+    pos = 0
+    for name, channel in sorted(subchannels.iteritems()):
+      channel.set_position(pos)
+      pos += 1
+
+  @staticmethod
   def userInChannel(user, channel):
     for snowflake, overwrite in channel.overwrites.iteritems():
       if overwrite.type == PermissionOverwriteType.MEMBER and overwrite.id == user.id:
@@ -121,6 +135,8 @@ class ExRaidPlugin(Plugin):
           traceback.print_exc()
           self.atReply(event, self.config.messages['channel_create_error'])
           continue
+
+        self.alphabetizeChannels(category, event.guild.channels)
 
       # Is the user already in the channel?
       if self.userInChannel(event.message.author, channel):
