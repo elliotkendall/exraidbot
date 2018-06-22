@@ -91,9 +91,12 @@ class ExRaidPlugin(Plugin):
     if not str(event.channel) in self.config.channels_to_watch:
       return None
 
+    message = event.channel.get_message(event.message_id)
+    if len(message.attachments) < 1:
+      return None
+
     user = event.client.state.users.get(event.user_id)
     member = event.guild.get_member(user)
-    message = event.channel.get_message(event.message_id)
 
     allowed = False
     for roleid in member.roles:
