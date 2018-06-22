@@ -6,6 +6,10 @@
     "admin",
     "mod"
   ],
+  "roles_who_can_reprocess_messages": [
+    "admin",
+    "mod"
+  ],
   "location_regular_expression": "(.*). (CA|California). United S[tk]a[ti]es",
   "old_channel_grace_days": 3,
   "include_city_in_channel_names": true,
@@ -18,6 +22,7 @@
     "user_already_in_channel": "It looks like you're already in that channel.",
     "channel_add_error": "Something went wrong adding you to the channel. Sorry about that.",
     "channel_create_error": "Something went wrong creating the channel. Sorry about that.",
+    "not_allowed_to_reprocess": "Sorry, you're not allowed to ask me to reprocess this message",
     "added_success": "Added you to channel:",
     "post_add_message": "Added to the channel:"
   },

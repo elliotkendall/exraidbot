@@ -81,39 +81,65 @@ class ExRaidPlugin(Plugin):
     return False
 
   @staticmethod
-  def atReply(event, text):
-    event.reply('<@' + str(event.message.author.id) + '> ' + text)
+  def atReply(message, text, author=None):
+    if author is None:
+      author=message.author
+    message.reply('<@' + str(author.id) + '> ' + text)
+
+  @Plugin.listen('MessageReactionAdd')
+  def on_reaction_add(self, event):
+    if not str(event.channel) in self.config.channels_to_watch:
+      return None
+
+    user = event.client.state.users.get(event.user_id)
+    member = event.guild.get_member(user)
+    message = event.channel.get_message(event.message_id)
+
+    allowed = False
+    for roleid in member.roles:
+      role = event.guild.roles[roleid]
+      if role.name in self.config.roles_who_can_reprocess_messages:
+        allowed = True
+    if not allowed and message.author.id != event.user_id:
+      self.atReply(message, self.config.messages['not_allowed_to_reprocess'], user)
+      return None
+
+    self.process_message(event, message)
 
   @Plugin.listen('MessageCreate')
   def on_message_create(self, event):
     if not str(event.channel) in self.config.channels_to_watch:
       return None
+    self.process_message(event)
 
-    for key, value in event.message.attachments.iteritems():
+  def process_message(self, event, message=None):
+    if message is None:
+      message = event.message
+    for key, value in message.attachments.iteritems():
       # Get the info from the image
       try:
         image = cv2utils.urlToImage(value.url)
         raidInfo = self.ocr.scanExRaidImage(image, self.top, self.bottom)
         if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin).days < 0:
-          self.atReply(event, self.config.messages['date_in_past'])
+          self.atReply(message, self.config.messages['date_in_past'])
           continue
         cname = pokediscord.generateChannelName(raidInfo, self.config.include_city_in_channel_names)
         catname = pokediscord.generateCategoryName(raidInfo)
       except pokeocr.MatchNotCenteredException:
         traceback.print_exc()
-        self.atReply(event, self.config.messages['match_not_centered'])
+        self.atReply(message, self.config.messages['match_not_centered'])
         continue
       except pokeocr.TooFewLinesException:
         traceback.print_exc()
-        self.atReply(event, self.config.messages['too_few_lines'])
+        self.atReply(message, self.config.messages['too_few_lines'])
         continue
       except pokeocr.InvalidCityException:
         traceback.print_exc()
-        self.atReply(event, self.config.messages['invalid_city'])
+        self.atReply(message, self.config.messages['invalid_city'])
         continue
       except Exception:
         traceback.print_exc()
-        self.atReply(event, self.config.messages['could_not_parse'])
+        self.atReply(message, self.config.messages['could_not_parse'])
         continue
 
       # Create the category if it doesn't exist
@@ -133,24 +159,24 @@ class ExRaidPlugin(Plugin):
             channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
         except Exception:
           traceback.print_exc()
-          self.atReply(event, self.config.messages['channel_create_error'])
+          self.atReply(message, self.config.messages['channel_create_error'])
           continue
 
         self.alphabetizeChannels(category, event.guild.channels)
 
       # Is the user already in the channel?
-      if self.userInChannel(event.message.author, channel):
-        self.atReply(event, self.config.messages['user_already_in_channel'])
+      if self.userInChannel(message.author, channel):
+        self.atReply(message, self.config.messages['user_already_in_channel'])
         continue
 
       # Add the user to the channel
       try:
-        channel.create_overwrite(event.message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
-        self.atReply(event, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>')
-        channel.send_message(self.config.messages['post_add_message'] + ' <@' + str(event.message.author.id) + '>')
+        channel.create_overwrite(message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
+        self.atReply(message, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>')
+        channel.send_message(self.config.messages['post_add_message'] + ' <@' + str(message.author.id) + '>')
       except Exception:
         traceback.print_exc()
-        self.atReply(event, self.config.messages['channel_add_error'])
+        self.atReply(message, self.config.messages['channel_add_error'])
         continue
 
       # Purge old channels

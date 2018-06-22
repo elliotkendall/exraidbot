@@ -6,6 +6,28 @@ bot will create a channel for the given raid time/location and add the user
 to that channel.  After a specified grace period, the bot will delete old
 channels next time it runs.
 
+## Features
+
+- Monitors a configurable list of channels
+
+- Creates categories by date
+
+- Creates channels by date, location name, (optionally) city name, and (for
+  non-unique locations) time of day
+
+- Add users to channels
+
+- Announces in the channel when a user has been newly added
+
+- When a user reacts to a message in a monitored channel, processes the
+  message as though it were just posted.  This feature is useful for going
+  through a backlog of messages from when the bot was offline.  See
+  **roles_who_can_reprocess_messages** under **Local Configuration**, below,
+  for more information.
+
+- Optionally deletes old channels after a configurable number of days have
+  passed since the raid took place
+
 ## Installation
 
 ### Linux
@@ -67,10 +89,15 @@ Edit config/exraid.json and customize the settings to your liking.
 - **channels_to_watch**: A list of channels where the bot will watch for
   images to be uploaded
 
-- **roles_for_new_channels**: A list of the names of role that you want
+- **roles_for_new_channels**: A list of the names of roles that you want
   assigned to any new channels the bot creates.  If your server has admin or
   moderator roles, you might want to list them here to that people can
   manually tweak the channels.
+
+- **roles_who_can_reprocess_messages**: A list of the names of roles that
+  are able to request that a message be reprocessed.  Individual users can
+  always reprocess their own messages.  See **Features**, above, for more
+  information.
 
 - **location_regular_expression**: A regular expression to match the
   location line in invites in your area.  For US states other than
