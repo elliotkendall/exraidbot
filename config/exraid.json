@@ -11,6 +11,21 @@
     "mod"
   ],
   "location_regular_expression": "(.*). (CA|California). United S[tk]a[ti]es",
+  "allowed_cities": [
+    "San Francisco",
+    "Belmont",
+    "Burlingame",
+    "Colma",
+    "Daly City",
+    "Foster City",
+    "Half Moon Bay",
+    "Pacifica",
+    "Redwood City",
+    "San Bruno",
+    "San Mateo",
+    "South San Francisco",
+    "Brisbane"
+  ],
   "old_channel_grace_days": 3,
   "include_city_in_channel_names": true,
   "messages": {
@@ -23,6 +38,7 @@
     "channel_add_error": "Something went wrong adding you to the channel. Sorry about that.",
     "channel_create_error": "Something went wrong creating the channel. Sorry about that.",
     "not_allowed_to_reprocess": "Sorry, you're not allowed to ask me to reprocess this message",
+    "city_not_allowed": "That city isn't covered by this Discord server. We cover these cities: ",
     "added_success": "Added you to channel:",
     "post_add_message": "Added to the channel:"
   },

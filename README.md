@@ -104,6 +104,10 @@ Edit config/exraid.json and customize the settings to your liking.
   California, you should just change "(CA|California)" as appropriate for
   your state, such as "(FL|Florida)".
 
+- **allowed_cities**: A list of cities that the bot will make channels for.
+  Helpful to restrict your server to a specific area. Set to an empty list
+  to allow any city.
+
 - **old_channel_grace_days**: How many days after a raid is over that its
   channel should stick around. Set this to -1 to disable expiration.
 
