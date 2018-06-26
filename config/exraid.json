@@ -24,7 +24,8 @@
     "San Bruno",
     "San Mateo",
     "South San Francisco",
-    "Brisbane"
+    "Brisbane",
+    "San Carlos"
   ],
   "old_channel_grace_days": 3,
   "include_city_in_channel_names": true,
