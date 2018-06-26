@@ -10,7 +10,7 @@
     "admin",
     "mod"
   ],
-  "location_regular_expression": "(.*). (CA|California). United S[tk]a[ti]es",
+  "location_regular_expression": "(.*). (CA|Ca[lI]ifornia). United S[tk]a[ti]es",
   "allowed_cities": [
     "San Francisco",
     "Belmont",
