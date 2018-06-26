@@ -123,9 +123,13 @@ class ExRaidPlugin(Plugin):
       try:
         image = cv2utils.urlToImage(value.url)
         raidInfo = self.ocr.scanExRaidImage(image, self.top, self.bottom, useCity=self.config.include_city_in_channel_names)
-        if raidInfo.city not in self.config.allowed_cities and len(self.config.allowed_cities) > 0:
-          self.atReply(message, self.config.messages['city_not_allowed'] + ', '.join(self.config.allowed_cities))
-          continue
+        try:
+          if raidInfo.city not in self.config.allowed_cities and len(self.config.allowed_cities) > 0:
+            self.atReply(message, self.config.messages['city_not_allowed'] + ', '.join(self.config.allowed_cities))
+            continue
+        except AttributeError:
+          # We'll assume no city is okay
+          pass
         if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin).days < 0:
           self.atReply(message, self.config.messages['date_in_past'])
           continue
