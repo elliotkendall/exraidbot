@@ -20,4 +20,4 @@ image = cv2.imread(sys.argv[1])
 
 ocr = pokeocr(config['location_regular_expression'])
 
-print ocr.scanExRaidImage(image, top, bottom, True)
+print ocr.scanExRaidImage(image, top, bottom, debug=True)

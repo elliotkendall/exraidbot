@@ -38,12 +38,12 @@ class pokeocr:
 
     # We want to return True/False, but we need to know the correct offset
     # if it's False. There's probably a better way to do this...
-    if diff > (width * .02):
+    if diff > (width * .04):
       return offset
     else:
       return True
   
-  def scanExRaidImage(self, image, top, bottom, debug=False):
+  def scanExRaidImage(self, image, top, bottom, useCity=True, debug=False):
     # Find the source image dimensions
     height, width, channels = image.shape
 
@@ -88,7 +88,15 @@ class pokeocr:
 
     if debug:
       return lines
-    if len(lines) < 4:
+
+    # If we're not going to use the city info anyway, we can process images
+    # that are missing it
+    if useCity:
+      minlines = 4
+    else:
+      minlines = 3
+
+    if len(lines) < minlines:
       raise TooFewLinesException('Found fewer lines of text than expected')
 
     ret = exRaidData()
@@ -110,15 +118,20 @@ class pokeocr:
 
     ret.location = lines[1]
 
+    gdindex = 3
     match = self.cityRE.match(lines[2])
     if match:
       ret.city = match.group(1)
+    elif (not useCity) and self.getDirectionsRE.match(lines[2]):
+      # When we're ignoring the city, it's okay for this line to be Get
+      # Directions
+      gdindex = 2
     else:
       raise InvalidCityException('City line did not match: ' + lines[2].encode('utf-8'))
 
-    match = self.getDirectionsRE.match(lines[3])
+    match = self.getDirectionsRE.match(lines[gdindex])
     if not match:
-      raise InvalidGetDirectionsException('Get directions did not match: ' + lines[3].encode('utf-8'))
+      raise InvalidGetDirectionsException('Get directions did not match: ' + lines[gdindex].encode('utf-8'))
 
     return ret
 
