@@ -181,5 +181,7 @@ Here are some Pokemon Go Discord communities that are using exraidbot.
 
 - **SF Pogo Raids Meetup**, San Francisco, California, USA
 
+- **[DTC Pokemon Go](https://www.dtc.fyi/)**, Chicago, Illinois, USA
+
 Please let me know if your community is using exraidbot so I can add you to
 this list.  Thanks.
