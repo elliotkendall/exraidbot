@@ -24,10 +24,11 @@ class pokediscord:
     return 'ex_raids_' + date
 
   @staticmethod
-  def generateChannelName(raidInfo, useCityName = True):
+  def generateChannelName(raidInfo, locale, useCityName = True):
     commonLocations = ['Starbucks', 'Find shiny deals at Sprint']
 
-    date = str(list(calendar.month_name).index(raidInfo.month)) + '-' + raidInfo.day
+    with calendar.TimeEncoding(locale) as encoding:
+      date = str(list(calendar.month_name).index(raidInfo.month)) + '-' + raidInfo.day
 
     city = ''
     # It's okay not to have city info if we're not going to use it anyway

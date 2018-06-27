@@ -8,6 +8,7 @@ import datetime
 import re
 import dateutil.parser
 import traceback
+import calendar
 
 import pokeocr
 from pokediscord import pokediscord
@@ -22,7 +23,11 @@ class ExRaidPlugin(Plugin):
     super(ExRaidPlugin, self).load(ctx)
     self.top = cv2.imread(self.config.top_image)
     self.bottom = cv2.imread(self.config.bottom_image)
-    self.ocr = pokeocr.pokeocr(self.config.location_regular_expression)
+    self.ocr = pokeocr.pokeocr(
+     self.config.location_regular_expression,
+     self.config.date_regular_expression,
+     self.config.get_directions_regular_expression
+    )
     self.exChannelRE = re.compile('^([0-9]{1,2})-([0-9]{1,2})_ex_')
 
   @staticmethod
@@ -44,19 +49,21 @@ class ExRaidPlugin(Plugin):
     return None
 
   @staticmethod
-  def dateDiff(datestring):
-    begin = dateutil.parser.parse(datestring)
-    now = datetime.datetime.today()
+  def dateDiff(datestring, locale):
+    with calendar.TimeEncoding(locale) as encoding:
+      begin = dateutil.parser.parse(datestring)
+      now = datetime.datetime.today()
+
     return begin - now
 
-  def purgeOldChannels(self, channels):
+  def purgeOldChannels(self, channels, locale):
     if self.config.old_channel_grace_days == -1:
       return None
     for channel in channels.values():
       date = pokediscord.channelNameToDate(channel.name)
       if not date:
         continue
-      if self.dateDiff(date).days < -self.config.old_channel_grace_days:
+      if self.dateDiff(date, locale).days < -self.config.old_channel_grace_days:
         channel.delete()
 
   @staticmethod
@@ -130,10 +137,10 @@ class ExRaidPlugin(Plugin):
         except AttributeError:
           # We'll assume no city is okay
           pass
-        if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin).days < 0:
+        if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin, self.config.locale).days < 0:
           self.atReply(message, self.config.messages['date_in_past'])
           continue
-        cname = pokediscord.generateChannelName(raidInfo, self.config.include_city_in_channel_names)
+        cname = pokediscord.generateChannelName(raidInfo, self.config.locale, self.config.include_city_in_channel_names)
         catname = pokediscord.generateCategoryName(raidInfo)
       except pokeocr.MatchNotCenteredException:
         traceback.print_exc()
@@ -190,4 +197,4 @@ class ExRaidPlugin(Plugin):
         continue
 
       # Purge old channels
-      self.purgeOldChannels(event.guild.channels)
+      self.purgeOldChannels(event.guild.channels, self.config.locale)

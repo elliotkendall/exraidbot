@@ -18,6 +18,10 @@ top = cv2.imread(config['top_image'])
 bottom = cv2.imread(config['bottom_image'])
 image = cv2.imread(sys.argv[1])
 
-ocr = pokeocr(config['location_regular_expression'])
+ocr = pokeocr(
+ config['location_regular_expression'],
+ config['date_regular_expression'],
+ config['get_directions_regular_expression']
+)
 
 print ocr.scanExRaidImage(image, top, bottom, debug=True)

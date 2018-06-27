@@ -23,12 +23,13 @@ class TooFewLinesException(Exception):
   pass
 
 class pokeocr:
-  def __init__(self, location_regex):
+  def __init__(self, location_regex, date_regex, gd_regex):
     self.tool = pyocr.get_available_tools()[0]
     self.lang = self.tool.get_available_languages()[0]
-    self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
+    self.dateTimeRE = re.compile(date_regex)
     self.cityRE = re.compile(location_regex)
-    self.getDirectionsRE = re.compile('Get.*ns')
+    self.getDirectionsRE = re.compile(gd_regex)
+    self.alphaRE = re.compile('[A-Za-z]+')
 
   @staticmethod
   def isMatchCentered(width, startx, endx):
@@ -106,8 +107,12 @@ class pokeocr:
     lines[0] = lines[0].replace('|', 'l')
     match = self.dateTimeRE.match(lines[0])
     if match:
-      ret.month = match.group(1)
-      ret.day = match.group(2)
+      if self.alphaRE.match(match.group(2)):
+        ret.month = match.group(2)
+        ret.day = match.group(1)
+      else:
+        ret.month = match.group(1)
+        ret.day = match.group(2)
 
       # Sometimes OCR drops the space between the minutes and AM/PM.  Let's
       # just strip all spaces for consistency
