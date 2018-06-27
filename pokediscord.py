@@ -42,6 +42,7 @@ class pokediscord:
 
     location = raidInfo.location.lower().replace(' ', '_')
     location = re.sub('[^a-z0-9_]', '', location)
+    location = location.strip('_')
     if raidInfo.location in commonLocations:
       begin = datetime.datetime.strptime(raidInfo.begin, '%I:%M%p')
       location += '_' + datetime.datetime.strftime(begin, "%H%M")
