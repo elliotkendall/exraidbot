@@ -99,6 +99,11 @@ Edit config/exraid.json and customize the settings to your liking.
   always reprocess their own messages.  See **Features**, above, for more
   information.
 
+- **fuzzy_channel_match_threshold**: How much "fuzz" to allow when looking
+  for duplicate channel names, which helps with OCR errors.  For example,
+  "argonne_playground" vs. "argonne_piayground" is a threshold of 99.  Set
+  to 100 to disable fuzzy matching.
+
 - **location_regular_expression**: A regular expression to match the
   location line in invites in your area.  For US states other than
   California, you should just change "(CA|California)" as appropriate for

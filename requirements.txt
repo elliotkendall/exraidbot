@@ -10,3 +10,4 @@ imutils
 python-dateutil
 pyocr
 disco-py
+fuzzywuzzy

@@ -8,6 +8,7 @@ import datetime
 import re
 import dateutil.parser
 import traceback
+from fuzzywuzzy import fuzz
 
 import pokeocr
 from pokediscord import pokediscord
@@ -31,6 +32,37 @@ class ExRaidPlugin(Plugin):
       if channel.name == cname:
         return channel
     return None
+
+  # Returns the closest matching channel name
+  @staticmethod
+  def getChannelByNameFuzzy(cname, channels):
+    has_ts_re = re.compile('_([0-9]{4})$')
+
+    match = has_ts_re.search(cname)
+    if match:
+      ts = match.group(1)
+      print 'Our timestamp is ' + ts
+    else:
+      ts = 0
+
+    best = None
+    bscore = None
+    for channel in channels.values():
+      print channel.name
+      score = fuzz.ratio(channel.name, cname)
+      match = has_ts_re.search(channel.name)
+      if match:
+        thists = match.group(1)
+        print 'This ts is ' + thists
+      else:
+        thists = 0
+
+      if (bscore is None or score > bscore) and ts == thists:
+        print 'New best'
+        best = channel
+        bscore = score
+
+    return (best, bscore)
 
   @classmethod
   def getEveryoneRole(cls, guild):
@@ -158,8 +190,11 @@ class ExRaidPlugin(Plugin):
         category = event.guild.create_category(catname)
 
       # Create the channel if it doesn't exist
-      channel = self.getChannelByName(cname, event.guild.channels)
-      if not channel:
+      (channel, score) = self.getChannelByNameFuzzy(cname, event.guild.channels)
+      if channel and score < 100:
+        self.atReply(message, self.config.messages['fuzzy_channel'].format(cname, channel.name))
+
+      if score < self.config.fuzzy_channel_match_threshold:
         try:
           channel = category.create_text_channel(cname)
           everyone = self.getEveryoneRole(event.guild)
