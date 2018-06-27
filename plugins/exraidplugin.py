@@ -41,24 +41,20 @@ class ExRaidPlugin(Plugin):
     match = has_ts_re.search(cname)
     if match:
       ts = match.group(1)
-      print 'Our timestamp is ' + ts
     else:
       ts = 0
 
     best = None
     bscore = None
     for channel in channels.values():
-      print channel.name
       score = fuzz.ratio(channel.name, cname)
       match = has_ts_re.search(channel.name)
       if match:
         thists = match.group(1)
-        print 'This ts is ' + thists
       else:
         thists = 0
 
       if (bscore is None or score > bscore) and ts == thists:
-        print 'New best'
         best = channel
         bscore = score
 
