@@ -112,6 +112,17 @@ class pokeocr:
     # be pipes in this data, so let's just replace them...
     lines[0] = lines[0].replace('|', 'l')
     match = self.dateTimeRE.match(lines[0])
+
+    if not match:
+      # Let's try to work around some common problems
+
+      # "[Month] 5" gets read as "[Month] S".  This should be safe because
+      # "S " and " S" shouldn't appear in legitimate date/time
+      lines[0] = lines[0].replace('S ', '5 ', 1)
+      lines[0] = lines[0].replace(' S', ' 5', 1)
+
+      match = self.dateTimeRE.match(lines[0])
+
     if match:
       ret.month = match.group(1)
       ret.day = match.group(2)
