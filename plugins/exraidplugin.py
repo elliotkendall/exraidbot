@@ -186,8 +186,8 @@ class ExRaidPlugin(Plugin):
         category = event.guild.create_category(catname)
 
       # Create the channel if it doesn't exist
-      (channel, score) = self.getChannelByNameFuzzy(cname, event.guild.channels)
-      if channel and score < 100:
+      channel = self.getChannelByName(cname, event.guild.channels)
+      if not channel:
         self.atReply(message, self.config.messages['fuzzy_channel'].format(cname, channel.name))
 
       if score < self.config.fuzzy_channel_match_threshold:
