@@ -188,9 +188,6 @@ class ExRaidPlugin(Plugin):
       # Create the channel if it doesn't exist
       channel = self.getChannelByName(cname, event.guild.channels)
       if not channel:
-        self.atReply(message, self.config.messages['fuzzy_channel'].format(cname, channel.name))
-
-      if score < self.config.fuzzy_channel_match_threshold:
         try:
           channel = category.create_text_channel(cname)
           everyone = self.getEveryoneRole(event.guild)
