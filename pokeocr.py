@@ -5,6 +5,7 @@ import pyocr.builders
 import cv2
 import sys
 import re
+import unicodedata
 from cv2utils import cv2utils
 
 class InvalidCityException(Exception):
@@ -77,6 +78,12 @@ class pokeocr:
 
     # OCR the text
     txt = self.tool.image_to_string(pil, lang=self.lang, builder=pyocr.builders.TextBuilder())
+
+    # Replace any non-ASCII unicode characters with their closest
+    # equivalents.  This is bad news for i18n, but helps us with a lot of
+    # OCR issues
+    txt = unicodedata.normalize('NFKD', txt)
+
     lines = txt.split("\n")
 
     # Sometimes OCR will insert extra empty lines, so let's strip them out
