@@ -93,6 +93,10 @@ class pokeocr:
         newlines.append(lines[i])
     lines = newlines
 
+    # Sometimes we get a leading jibberish line
+    if not self.dateTimeRE.match(lines[0]):
+      del lines[0]
+
     if debug:
       return lines
 
