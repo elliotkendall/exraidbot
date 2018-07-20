@@ -93,10 +93,6 @@ class pokeocr:
         newlines.append(lines[i])
     lines = newlines
 
-    # Sometimes we get a leading jibberish line
-    if not self.dateTimeRE.match(lines[0]):
-      del lines[0]
-
     if debug:
       return lines
 
@@ -125,6 +121,11 @@ class pokeocr:
       lines[0] = lines[0].replace('S ', '5 ', 1)
       lines[0] = lines[0].replace(' S', ' 5', 1)
 
+      match = self.dateTimeRE.match(lines[0])
+
+    # Sometimes we get a leading jibberish line
+    if not match:
+      del lines[0]
       match = self.dateTimeRE.match(lines[0])
 
     if match:
