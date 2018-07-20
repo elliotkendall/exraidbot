@@ -120,6 +120,9 @@ Edit config/exraid.json and customize the settings to your liking.
   the city in the names of channels we create.  If your Discord covers only
   a single city, you may wish to set this to false.
 
+- **channel_category**: If set, the bot will place newly created channels
+  in this category. If not, it will be named for the day of the raid.
+
 - **messages**: The messages that the bot will respond with in various
   situations.
 

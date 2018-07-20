@@ -162,7 +162,10 @@ class ExRaidPlugin(Plugin):
           self.atReply(message, self.config.messages['date_in_past'])
           continue
         cname = pokediscord.generateChannelName(raidInfo, self.config.include_city_in_channel_names)
-        catname = pokediscord.generateCategoryName(raidInfo)
+        try:
+          catname = self.config.channel_category
+        except AttributeError:
+          catname = pokediscord.generateCategoryName(raidInfo)
       except pokeocr.MatchNotCenteredException:
         traceback.print_exc()
         self.atReply(message, self.config.messages['match_not_centered'])
