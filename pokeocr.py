@@ -8,156 +8,163 @@ import re
 import unicodedata
 from cv2utils import cv2utils
 
+
 class InvalidCityException(Exception):
-  pass
+    pass
+
 
 class InvalidDateTimeException(Exception):
-  pass
+    pass
+
 
 class InvalidGetDirectionsException(Exception):
-  pass
+    pass
+
 
 class MatchNotCenteredException(Exception):
-  pass
+    pass
+
 
 class TooFewLinesException(Exception):
-  pass
+    pass
+
 
 class pokeocr:
-  def __init__(self, location_regex):
-    self.tool = pyocr.get_available_tools()[0]
-    self.lang = self.tool.get_available_languages()[0]
-    self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
-    self.cityRE = re.compile(location_regex)
-    self.getDirectionsRE = re.compile('Get.*ns')
+    def __init__(self, location_regex):
+        self.tool = pyocr.get_available_tools()[0]
+        self.lang = self.tool.get_available_languages()[0]
+        self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
+        self.cityRE = re.compile(location_regex)
+        self.getDirectionsRE = re.compile('Get.*ns')
 
-  @staticmethod
-  def isMatchCentered(width, startx, endx):
-    matchw = endx - startx
-    offset = (width - matchw) / 2
-    diff = abs(offset - startx)
+    @staticmethod
+    def isMatchCentered(width, startx, endx):
+        matchw = endx - startx
+        offset = (width - matchw) / 2
+        diff = abs(offset - startx)
 
-    # We want to return True/False, but we need to know the correct offset
-    # if it's False. There's probably a better way to do this...
-    if diff > (width * .04):
-      return offset
-    else:
-      return True
-  
-  def scanExRaidImage(self, image, top, bottom, useCity=True, debug=False):
-    # Find the source image dimensions
-    height, width, channels = image.shape
+        # We want to return True/False, but we need to know the correct offset
+        # if it's False. There's probably a better way to do this...
+        if diff > (width * .04):
+            return offset
+        else:
+            return True
 
-    # Run the scaling matcher to find the template, then sanity check the
-    # match
-    ((b_startX, b_startY), (b_endX, b_endY)) = cv2utils.scalingMatch(top, image)
-    val = self.isMatchCentered(width, b_startX, b_endX)
-    if val != True:
-      raise MatchNotCenteredException('Top template match not centered. Starts at ' + str(b_startX) + ', should be ' + str(val))
-    ((t_startX, t_startY), (t_endX, t_endY)) = cv2utils.scalingMatch(bottom, image)
-    val = self.isMatchCentered(width, t_startX, t_endX)
-    if val != True:
-      raise MatchNotCenteredException('Bottom template match not centered. Starts at ' + str(t_startX) + ', should be ' + str(val))
+    def scanExRaidImage(self, image, top, bottom, useCity=True, debug=False):
+        # Find the source image dimensions
+        height, width, channels = image.shape
 
-    # Crop the image
-    image = image[b_endY:t_startY,b_startX:b_endX]
+        # Run the scaling matcher to find the template, then sanity check the
+        # match
+        ((b_startX, b_startY), (b_endX, b_endY)) = cv2utils.scalingMatch(top, image)
+        val = self.isMatchCentered(width, b_startX, b_endX)
+        if val != True:
+            raise MatchNotCenteredException('Top template match not centered. Starts at ' + str(b_startX) + ', should be ' + str(val))
+        ((t_startX, t_startY), (t_endX, t_endY)) = cv2utils.scalingMatch(bottom, image)
+        val = self.isMatchCentered(width, t_startX, t_endX)
+        if val != True:
+            raise MatchNotCenteredException('Bottom template match not centered. Starts at ' + str(t_startX) + ', should be ' + str(val))
 
-    # Scale up small images
-    height, width = image.shape[:2]
-    if width < 509:
-      image = cv2.resize(image, (0,0), fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+        # Crop the image
+        image = image[b_endY:t_startY, b_startX:b_endX]
 
-    # Increase contrast. Must be done before grayscale conversion
-    image = cv2utils.increaseContrast(image)
+        # Scale up small images
+        height, width = image.shape[:2]
+        if width < 509:
+            image = cv2.resize(image, (0, 0), fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
 
-    # Convert to grayscale
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # Increase contrast. Must be done before grayscale conversion
+        image = cv2utils.increaseContrast(image)
 
-    # Convert to PIL format
-    pil = Image.fromarray(image)
+        # Convert to grayscale
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # OCR the text
-    txt = self.tool.image_to_string(pil, lang=self.lang, builder=pyocr.builders.TextBuilder())
+        # Convert to PIL format
+        pil = Image.fromarray(image)
 
-    # Replace any non-ASCII unicode characters with their closest
-    # equivalents.  This is bad news for i18n, but helps us with a lot of
-    # OCR issues
-    txt = unicodedata.normalize('NFKD', txt)
+        # OCR the text
+        txt = self.tool.image_to_string(pil, lang=self.lang, builder=pyocr.builders.TextBuilder())
 
-    lines = txt.split("\n")
+        # Replace any non-ASCII unicode characters with their closest
+        # equivalents.  This is bad news for i18n, but helps us with a lot of
+        # OCR issues
+        txt = unicodedata.normalize('NFKD', txt)
 
-    # Sometimes OCR will insert extra empty lines, so let's strip them out
-    newlines = []
-    for i in range(len(lines)):
-      if not len(lines[i].strip()) == 0:
-        newlines.append(lines[i])
-    lines = newlines
+        lines = txt.split("\n")
 
-    if debug:
-      return lines
+        # Sometimes OCR will insert extra empty lines, so let's strip them out
+        newlines = []
+        for i in range(len(lines)):
+            if not len(lines[i].strip()) == 0:
+                newlines.append(lines[i])
+        lines = newlines
 
-    # If we're not going to use the city info anyway, we can process images
-    # that are missing it
-    if useCity:
-      minlines = 4
-    else:
-      minlines = 3
+        if debug:
+            return lines
 
-    if len(lines) < minlines:
-      raise TooFewLinesException('Found fewer lines of text than expected')
+        # If we're not going to use the city info anyway, we can process images
+        # that are missing it
+        if useCity:
+            minlines = 4
+        else:
+            minlines = 3
 
-    ret = exRaidData()
+        if len(lines) < minlines:
+            raise TooFewLinesException('Found fewer lines of text than expected')
 
-    # A common issue is reading lowercase L as pipe. There should never
-    # be pipes in this data, so let's just replace them...
-    lines[0] = lines[0].replace('|', 'l')
-    match = self.dateTimeRE.match(lines[0])
+        ret = exRaidData()
 
-    if not match:
-      # Let's try to work around some common problems
+        # A common issue is reading lowercase L as pipe. There should never
+        # be pipes in this data, so let's just replace them...
+        lines[0] = lines[0].replace('|', 'l')
+        match = self.dateTimeRE.match(lines[0])
 
-      # "[Month] 5" gets read as "[Month] S".  This should be safe because
-      # "S " and " S" shouldn't appear in legitimate date/time
-      lines[0] = lines[0].replace('S ', '5 ', 1)
-      lines[0] = lines[0].replace(' S', ' 5', 1)
+        if not match:
+            # Let's try to work around some common problems
 
-      match = self.dateTimeRE.match(lines[0])
+            # "[Month] 5" gets read as "[Month] S".  This should be safe because
+            # "S " and " S" shouldn't appear in legitimate date/time
+            lines[0] = lines[0].replace('S ', '5 ', 1)
+            lines[0] = lines[0].replace(' S', ' 5', 1)
 
-    # Sometimes we get a leading jibberish line
-    if not match:
-      del lines[0]
-      match = self.dateTimeRE.match(lines[0])
+            match = self.dateTimeRE.match(lines[0])
 
-    if match:
-      ret.month = match.group(1)
-      ret.day = match.group(2)
+        # Sometimes we get a leading jibberish line
+        if not match:
+            del lines[0]
+            match = self.dateTimeRE.match(lines[0])
 
-      # Sometimes OCR drops the space between the minutes and AM/PM.  Let's
-      # just strip all spaces for consistency
-      ret.begin = match.group(3).replace(' ', '')
-      ret.end = match.group(4).replace(' ', '')
-    else:
-      raise InvalidDateTimeException('Date/time line did not match: ' + lines[0].encode('utf-8'))
+        if match:
+            ret.month = match.group(1)
+            ret.day = match.group(2)
 
-    ret.location = lines[1]
+            # Sometimes OCR drops the space between the minutes and AM/PM.  Let's
+            # just strip all spaces for consistency
+            ret.begin = match.group(3).replace(' ', '')
+            ret.end = match.group(4).replace(' ', '')
+        else:
+            raise InvalidDateTimeException('Date/time line did not match: ' + lines[0].encode('utf-8'))
 
-    gdindex = 3
-    match = self.cityRE.match(lines[2])
-    if match:
-      ret.city = match.group(1)
-    elif (not useCity) and self.getDirectionsRE.match(lines[2]):
-      # When we're ignoring the city, it's okay for this line to be Get
-      # Directions
-      gdindex = 2
-    else:
-      raise InvalidCityException('City line did not match: ' + lines[2].encode('utf-8'))
+        ret.location = lines[1]
 
-    match = self.getDirectionsRE.match(lines[gdindex])
-    if not match:
-      raise InvalidGetDirectionsException('Get directions did not match: ' + lines[gdindex].encode('utf-8'))
+        gdindex = 3
+        match = self.cityRE.match(lines[2])
+        if match:
+            ret.city = match.group(1)
+        elif (not useCity) and self.getDirectionsRE.match(lines[2]):
+            # When we're ignoring the city, it's okay for this line to be Get
+            # Directions
+            gdindex = 2
+        else:
+            raise InvalidCityException('City line did not match: ' + lines[2].encode('utf-8'))
 
-    return ret
+        match = self.getDirectionsRE.match(lines[gdindex])
+        if not match:
+            raise InvalidGetDirectionsException('Get directions did not match: ' + lines[gdindex].encode('utf-8'))
+
+        return ret
+
 
 class exRaidData:
-  def __init__(self, **kwargs):
-    self.__dict__.update(kwargs)
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
