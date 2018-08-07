@@ -25,7 +25,7 @@ class pokediscord:
         return 'ex_raids_' + date
 
     @staticmethod
-    def generateChannelName(raidInfo, useCityName=True):
+    def generateChannelName(raidInfo, useCityName=False):
         commonLocations = ['Starbucks', 'Find shiny deals at Sprint']
 
         date = raidInfo.day + '-' + str(list(calendar.month_name).index(raidInfo.month))

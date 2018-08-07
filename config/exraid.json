@@ -1,16 +1,17 @@
 {
   "channels_to_watch": [
-    "#repurposed_exraid "
+    "#repurposed_exraid"
   ],
   "roles_for_new_channels": [
     "God mode",
-    "Bots"
+    "Robots",
+    "harpaexraid"
   ],
   "roles_who_can_reprocess_messages": [
     "God mode",
     "Bots"
   ],
-  "fuzzy_channel_match_threshold": 97,
+  "fuzzy_channel_match_threshold": 99,
   "location_regular_expression": "(.*). (WA|Western Australia). Australia",
   "allowed_cities": [
   ],
