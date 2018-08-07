@@ -169,17 +169,22 @@ class ExRaidPlugin(Plugin):
                 except AttributeError:
                     catname = pokediscord.generateCategoryName(raidInfo)
             except pokeocr.MatchNotCenteredException:
+                traceback.print_exc()
                 self.atReply(message, self.config.messages['match_not_centered'])
                 continue
             except pokeocr.TooFewLinesException:
+                traceback.print_exc()
                 self.atReply(message, self.config.messages['too_few_lines'])
                 continue
             except pokeocr.InvalidCityException:
+                traceback.print_exc()
                 self.atReply(message, self.config.messages['invalid_city'])
                 continue
             except Exception:
+                traceback.print_exc()
                 self.atReply(message, self.config.messages['could_not_parse'])
                 continue
+
 
             # Create the category if it doesn't exist
             category = self.getChannelByName(catname, event.guild.channels)
