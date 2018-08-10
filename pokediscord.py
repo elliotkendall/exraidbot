@@ -52,3 +52,8 @@ class pokediscord:
         else:
             channel = date + '_ex_' + location
         return channel
+
+    @staticmethod
+    def generateRoleName(raidInfo):
+        location = raidInfo.location.lower().replace(' ', '_')
+        return 'ex_roles_' + location

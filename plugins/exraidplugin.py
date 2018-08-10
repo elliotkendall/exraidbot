@@ -3,6 +3,7 @@ from disco.bot import Bot, Plugin, Config
 from disco.types.permissions import PermissionValue, Permissions
 from disco.types.channel import PermissionOverwriteType
 
+
 import cv2
 import datetime
 import re
@@ -104,9 +105,11 @@ class ExRaidPlugin(Plugin):
             pos += 1
 
     @staticmethod
-    def userInChannel(user, channel):
-        for snowflake, overwrite in channel.overwrites.iteritems():
-            if overwrite.type == PermissionOverwriteType.MEMBER and overwrite.id == user.id:
+    def userInChannel(user, chan_role):
+        for roles in user.roles:
+            print(roles)
+            print(chan_role.id)
+            if roles == chan_role.id:
                 return True
         return False
 
@@ -164,7 +167,6 @@ class ExRaidPlugin(Plugin):
                     self.atReply(message, self.config.messages['date_in_past'])
                     continue
                 cname = pokediscord.generateChannelName(raidInfo, self.config.include_city_in_channel_names)
-                print(cname)
                 try:
                     catname = self.config.channel_category
                 except AttributeError:
@@ -194,14 +196,27 @@ class ExRaidPlugin(Plugin):
 
             # Create the channel if it doesn't exist
             channel = self.getChannelByName(cname, event.guild.channels)
+            new_role = pokediscord.generateRoleName(raidInfo)
             if not channel:
                 try:
                     channel = category.create_text_channel(cname)
                     everyone = self.getEveryoneRole(event.guild)
                     channel.create_overwrite(everyone, deny=PermissionValue(Permissions.READ_MESSAGES))
                     for rname in self.config.roles_for_new_channels:
-                        role = self.getRoleByName(rname, event.guild)
-                        channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
+                        modrole = self.getRoleByName(rname, event.guild)
+                        channel.create_overwrite(modrole, allow=PermissionValue(Permissions.READ_MESSAGES))
+                except Exception:
+                    traceback.print_exc()
+                    self.atReply(message, self.config.messages['channel_create_error'])
+                    continue
+
+            # Create the role if it doesn't exist
+            if not self.getRoleByName(new_role, event.guild):
+                try:
+                    event.guild.create_role(name=new_role)
+                    role = self.getRoleByName(new_role, event.guild)
+                    channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
+                    print("made a new role")
                 except Exception:
                     traceback.print_exc()
                     self.atReply(message, self.config.messages['channel_create_error'])
@@ -210,13 +225,18 @@ class ExRaidPlugin(Plugin):
                 self.alphabetizeChannels(category, event.guild.channels)
 
             # Is the user already in the channel?
-            if self.userInChannel(message.author, channel):
+            chan_role = self.getRoleByName(new_role, event.guild)
+            user = event.client.state.users.get(event.user_id)
+            member = event.guild.get_member(user)
+            if self.userInChannel(member, chan_role):
                 self.atReply(message, self.config.messages['user_already_in_channel'])
                 continue
 
             # Add the user to the channel
             try:
-                channel.create_overwrite(message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
+                user = event.guild.get_member(message.author)
+                role = self.getRoleByName(new_role, event.guild)
+                user.add_role(role)
                 self.atReply(message, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>')
                 channel.send_message(self.config.messages['post_add_message'] + ' <@' + str(message.author.id) + '>')
             except Exception:
