@@ -76,11 +76,11 @@ class ExRaidPlugin(Plugin):
 
     @staticmethod
     def dateDiff(datestring):
-        begin = dateutil.parser.parse(datestring)
+        begin = dateutil.parser.parse(datestring, dayfirst=True)
         now = datetime.datetime.today()
         return begin - now
 
-    def purgeOldChannels(self, channels):
+    def purgeOldChannels(self, event, channels, roles):
         if self.config.old_channel_grace_days == -1:
             return None
         for channel in channels.values():
@@ -89,6 +89,10 @@ class ExRaidPlugin(Plugin):
                 continue
             if self.dateDiff(date).days < -self.config.old_channel_grace_days:
                 channel.delete()
+                role_name = 'ex_roles_' + channel.name[8:]
+                ex_role = self.getRoleByName(role_name, event.guild)
+                if ex_role:
+                    ex_role.delete()
 
     @staticmethod
     def alphabetizeChannels(category, channels):
@@ -107,8 +111,6 @@ class ExRaidPlugin(Plugin):
     @staticmethod
     def userInChannel(user, chan_role):
         for roles in user.roles:
-            print(roles)
-            print(chan_role.id)
             if roles == chan_role.id:
                 return True
         return False
@@ -146,7 +148,7 @@ class ExRaidPlugin(Plugin):
     def on_message_create(self, event):
         if not str(event.channel) in self.config.channels_to_watch:
             return None
-        self.process_message(event)
+        self.process_message(event, )
 
     def process_message(self, event, message=None):
         if message is None:
@@ -216,7 +218,6 @@ class ExRaidPlugin(Plugin):
                     event.guild.create_role(name=new_role)
                     role = self.getRoleByName(new_role, event.guild)
                     channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
-                    print("made a new role")
                 except Exception:
                     traceback.print_exc()
                     self.atReply(message, self.config.messages['channel_create_error'])
@@ -226,9 +227,8 @@ class ExRaidPlugin(Plugin):
 
             # Is the user already in the channel?
             chan_role = self.getRoleByName(new_role, event.guild)
-            user = event.client.state.users.get(event.user_id)
-            member = event.guild.get_member(user)
-            if self.userInChannel(member, chan_role):
+            user = event.guild.get_member(message.author)
+            if self.userInChannel(user, chan_role):
                 self.atReply(message, self.config.messages['user_already_in_channel'])
                 continue
 
@@ -237,12 +237,12 @@ class ExRaidPlugin(Plugin):
                 user = event.guild.get_member(message.author)
                 role = self.getRoleByName(new_role, event.guild)
                 user.add_role(role)
-                self.atReply(message, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>')
-                channel.send_message(self.config.messages['post_add_message'] + ' <@' + str(message.author.id) + '>')
+                self.atReply(message, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>!')
+                channel.send_message(self.config.messages['post_add_message'] + ' <@' + str(message.author.id) + '>!')
             except Exception:
                 traceback.print_exc()
                 self.atReply(message, self.config.messages['channel_add_error'])
                 continue
 
             # Purge old channels
-            self.purgeOldChannels(event.guild.channels)
+        self.purgeOldChannels(event, event.guild.channels, event.guild.roles)
