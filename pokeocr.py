@@ -117,6 +117,7 @@ class pokeocr:
         # A common issue is reading lowercase L as pipe. There should never
         # be pipes in this data, so let's just replace them...
         lines[0] = lines[0].replace('|', 'l')
+        lines[0] = lines[0].replace('_ls_', '_is_')
         match = self.dateTimeRE.match(lines[0])
 
         if not match:
