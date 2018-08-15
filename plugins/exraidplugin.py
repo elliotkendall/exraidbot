@@ -9,6 +9,7 @@ import datetime
 import re
 import dateutil.parser
 import traceback
+import time
 from fuzzywuzzy import fuzz
 
 import pokeocr
@@ -216,6 +217,7 @@ class ExRaidPlugin(Plugin):
             if not self.getRoleByName(new_role, event.guild):
                 try:
                     event.guild.create_role(name=new_role)
+                    time.sleep(2)
                     role = self.getRoleByName(new_role, event.guild)
                     channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
                 except Exception:
