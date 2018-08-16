@@ -11,6 +11,7 @@ from cv2utils import cv2utils
 
 parser = argparse.ArgumentParser(description='Parse an EX raid image (high level)')
 parser.add_argument('-f', dest='configfile', default='config/exraid.json')
+parser.add_argument('-o', dest='outfile')
 parser.add_argument('image')
 args = parser.parse_args()
 
@@ -27,5 +28,8 @@ image = cv2.imread(args.image)
 
 image = image[b_endY:t_startY,b_startX:b_endX]
 
-cv2.imshow("Image", image)
-cv2.waitKey(0)
+if args.outfile:
+  cv2.imwrite(args.outfile, image)
+else:
+  cv2.imshow("Image", image)
+  cv2.waitKey(0)
