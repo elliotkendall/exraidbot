@@ -207,7 +207,7 @@ class ExRaidPlugin(Plugin):
 
       # Is the user already in the channel?
       if self.userInChannel(message.author, channel):
-        self.atReply(message, self.config.messages['user_already_in_channel'])
+        self.atReply(message, self.config.messages['user_already_in_channel'] + ' <#' + str(channel.id) + '>')
         continue
 
       # Add the user to the channel
