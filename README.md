@@ -67,6 +67,28 @@ In my testing, I've been unable to get things working correctly with either
 Cygwin or the libtesseract DLL.  If anyone else figures either of those
 options out, please let me know.
 
+### Mac OS
+
+These instructions were developed on Mac OS 10.13 High Sierra.  They may not
+work unmodified on earlier or later versions.
+
+Install Xcode from the App Store if you don't already have it.
+
+If you just installed Xcode, run "sudo xcodebuild -license" and agree to the
+terms.
+
+Install homebrew from https://brew.sh/ if you don't already have it.
+
+Run "brew install tesseract"
+
+Run "sudo easy_install pip"
+
+Run "pip install --user -r requirements.txt"
+
+Run "pip install --user 'numpy>=1.11.1' six==1.11.0".  For some reason, pip
+installs versions of these modules that it knows are incompatible with some
+other modules.
+
 ## Discord Configuration
 
 Create a Discord user for your bot, get an authentication token for it, and
