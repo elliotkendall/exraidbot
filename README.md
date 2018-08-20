@@ -83,6 +83,8 @@ Run "brew install tesseract"
 
 Run "sudo easy_install pip"
 
+Change to the directory where you've checked out the exraidbot code.
+
 Run "pip install --user -r requirements.txt"
 
 Run "pip install --user 'numpy>=1.11.1' six==1.11.0".  For some reason, pip
