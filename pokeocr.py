@@ -50,17 +50,17 @@ class pokeocr:
 
     # Run the scaling matcher to find the template, then sanity check the
     # match
-    ((b_startX, b_startY), (b_endX, b_endY)) = cv2utils.scalingMatch(top, image)
-    val = self.isMatchCentered(width, b_startX, b_endX)
+    ((t_left, t_top), (t_right, t_bottom)) = cv2utils.scalingMatch(top, image)
+    val = self.isMatchCentered(width, t_left, t_right)
     if val != True:
       raise MatchNotCenteredException('Top template match not centered. Starts at ' + str(b_startX) + ', should be ' + str(val))
-    ((t_startX, t_startY), (t_endX, t_endY)) = cv2utils.scalingMatch(bottom, image)
-    val = self.isMatchCentered(width, t_startX, t_endX)
+    ((b_left, b_top), (b_right, b_bottom)) = cv2utils.scalingMatch(bottom, image)
+    val = self.isMatchCentered(width, b_left, b_right)
     if val != True:
       raise MatchNotCenteredException('Bottom template match not centered. Starts at ' + str(t_startX) + ', should be ' + str(val))
 
     # Crop the image
-    image = image[b_endY:t_startY,b_startX:b_endX]
+    image = image[t_bottom:b_top,t_left:t_right]
 
     # Scale up, which oddly helps with OCR
     height, width = image.shape[:2]
