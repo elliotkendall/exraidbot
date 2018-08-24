@@ -44,25 +44,27 @@ class pokeocr:
     else:
       return True
 
-  def cropExRaidImage(self, image, top, bottom):
+  def cropExRaidImage(self, image, topleft, bottom, debug=False):
     height, width = image.shape[:2]
 
     # Run the scaling matcher to find the template, then sanity check the
     # match
-    ((t_left, t_top), (t_right, t_bottom)) = cv2utils.scalingMatch(top, image)
-    val = self.isMatchCentered(width, t_left, t_right)
-    if val != True:
-      raise MatchNotCenteredException('Top template match not centered. Starts at ' + str(b_startX) + ', should be ' + str(val))
+    ((tl_left, tl_top), (tl_right, tl_bottom)) = cv2utils.scalingMatch(topleft, image)
     ((b_left, b_top), (b_right, b_bottom)) = cv2utils.scalingMatch(bottom, image)
-    val = self.isMatchCentered(width, b_left, b_right)
-    if val != True:
-      raise MatchNotCenteredException('Bottom template match not centered. Starts at ' + str(t_startX) + ', should be ' + str(val))
+    if not debug:
+      val = self.isMatchCentered(width, b_left, b_right)
+      if val != True:
+        raise MatchNotCenteredException('Bottom template match not centered. Starts at ' + str(b_left) + ', should be ' + str(val))
+
+    # Let's assume that the right offset is the same as the left. We could
+    # match on a top-right image, but it would tank performance even more.
+    right = width - tl_left
 
     # Crop the image
-    return image[t_bottom:b_top,t_left:t_right]
+    return image[tl_bottom:b_top,tl_left:right]
   
-  def scanExRaidImage(self, image, top, bottom, useCity=True, debug=False):
-    image = self.cropExRaidImage(image, top, bottom)
+  def scanExRaidImage(self, image, topleft, bottom, useCity=True, debug=False):
+    image = self.cropExRaidImage(image, topleft, bottom)
 
     # Scale up, which oddly helps with OCR
     height, width = image.shape[:2]

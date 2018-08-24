@@ -20,7 +20,7 @@ COPY config.json $EXRAIDBOT_HOME
 COPY cv2utils.py $EXRAIDBOT_HOME
 COPY pokediscord.py $EXRAIDBOT_HOME
 COPY pokeocr.py $EXRAIDBOT_HOME
-COPY top.png $EXRAIDBOT_HOME
+COPY topleft.png $EXRAIDBOT_HOME
 COPY bottom.png $EXRAIDBOT_HOME
 COPY config/exraid.json $EXRAIDBOT_HOME/config/
 COPY plugins/exraidplugin.py $EXRAIDBOT_HOME/plugins/

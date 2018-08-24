@@ -45,6 +45,6 @@
     "added_success": "Added you to channel:",
     "post_add_message": "Added to the channel:"
   },
-  "top_image": "top.png",
+  "top_left_image": "topleft.png",
   "bottom_image": "bottom.png"
 }

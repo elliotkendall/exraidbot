@@ -150,8 +150,8 @@ Edit config/exraid.json and customize the settings to your liking.
 - **messages**: The messages that the bot will respond with in various
   situations.
 
-- **top_image** / **bottom_image**: The names of images to use for analysis
-  of the invite images. You shouldn't need to edit these.
+- **top_left_image** / **bottom_image**: The names of images to use for
+  analysis of the invite images.  You shouldn't need to edit these.
 
 ## Running
 

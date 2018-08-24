@@ -21,7 +21,7 @@ class ExRaidPluginConfig(Config):
 class ExRaidPlugin(Plugin):
   def load(self, ctx):
     super(ExRaidPlugin, self).load(ctx)
-    self.top = cv2.imread(self.config.top_image)
+    self.topleft = cv2.imread(self.config.top_left_image)
     self.bottom = cv2.imread(self.config.bottom_image)
     self.ocr = pokeocr.pokeocr(self.config.location_regular_expression)
     self.exChannelRE = re.compile('^([0-9]{1,2})-([0-9]{1,2})_ex_')
@@ -150,7 +150,7 @@ class ExRaidPlugin(Plugin):
       # Get the info from the image
       try:
         image = cv2utils.urlToImage(value.url)
-        raidInfo = self.ocr.scanExRaidImage(image, self.top, self.bottom, useCity=self.config.include_city_in_channel_names)
+        raidInfo = self.ocr.scanExRaidImage(image, self.topleft, self.bottom, useCity=self.config.include_city_in_channel_names)
         try:
           if raidInfo.city not in self.config.allowed_cities and len(self.config.allowed_cities) > 0:
             self.atReply(message, self.config.messages['city_not_allowed'] + ', '.join(self.config.allowed_cities))

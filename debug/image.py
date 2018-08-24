@@ -20,13 +20,13 @@ f = open(args.configfile)
 config = json.load(f)
 f.close()
 
-top = cv2.imread(config['top_image'])
+topleft = cv2.imread(config['top_left_image'])
 bottom = cv2.imread(config['bottom_image'])
 image = cv2.imread(args.image)
 
 ocr = pokeocr(config['location_regular_expression'])
 
-image = ocr.cropExRaidImage(image, top, bottom)
+image = ocr.cropExRaidImage(image, topleft, bottom, True)
 
 if args.outfile:
   cv2.imwrite(args.outfile, image)
