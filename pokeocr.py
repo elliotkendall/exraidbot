@@ -62,10 +62,9 @@ class pokeocr:
     # Crop the image
     image = image[b_endY:t_startY,b_startX:b_endX]
 
-    # Scale up small images
+    # Scale up, which oddly helps with OCR
     height, width = image.shape[:2]
-    if width < 509:
-      image = cv2.resize(image, (0,0), fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
+    image = cv2.resize(image, (0,0), fx=3, fy=3, interpolation=cv2.INTER_CUBIC)
 
     # Increase contrast. Must be done before grayscale conversion
     image = cv2utils.increaseContrast(image)
