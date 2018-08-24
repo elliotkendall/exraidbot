@@ -43,10 +43,9 @@ class pokeocr:
       return offset
     else:
       return True
-  
-  def scanExRaidImage(self, image, top, bottom, useCity=True, debug=False):
-    # Find the source image dimensions
-    height, width, channels = image.shape
+
+  def cropExRaidImage(self, image, top, bottom):
+    height, width = image.shape[:2]
 
     # Run the scaling matcher to find the template, then sanity check the
     # match
@@ -60,7 +59,10 @@ class pokeocr:
       raise MatchNotCenteredException('Bottom template match not centered. Starts at ' + str(t_startX) + ', should be ' + str(val))
 
     # Crop the image
-    image = image[t_bottom:b_top,t_left:t_right]
+    return image[t_bottom:b_top,t_left:t_right]
+  
+  def scanExRaidImage(self, image, top, bottom, useCity=True, debug=False):
+    image = self.cropExRaidImage(image, top, bottom)
 
     # Scale up, which oddly helps with OCR
     height, width = image.shape[:2]

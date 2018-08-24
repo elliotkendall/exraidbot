@@ -8,6 +8,7 @@ from os.path import dirname
 sys.path.append(dirname(dirname(__file__)))
 
 from cv2utils import cv2utils
+from pokeocr import pokeocr
 
 parser = argparse.ArgumentParser(description='Parse an EX raid image (high level)')
 parser.add_argument('-f', dest='configfile', default='config/exraid.json')
@@ -23,10 +24,9 @@ top = cv2.imread(config['top_image'])
 bottom = cv2.imread(config['bottom_image'])
 image = cv2.imread(args.image)
 
-((b_startX, b_startY), (b_endX, b_endY)) = cv2utils.scalingMatch(top, image)
-((t_startX, t_startY), (t_endX, t_endY)) = cv2utils.scalingMatch(bottom, image)
+ocr = pokeocr(config['location_regular_expression'])
 
-image = image[b_endY:t_startY,b_startX:b_endX]
+image = ocr.cropExRaidImage(image, top, bottom)
 
 if args.outfile:
   cv2.imwrite(args.outfile, image)
