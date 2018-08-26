@@ -111,9 +111,11 @@ class pokeocr:
 
     ret = exRaidData()
 
-    # A common issue is reading lowercase L as pipe. There should never
-    # be pipes in this data, so let's just replace them...
+    # A common issue is reading lowercase L as pipe. There should never be
+    # pipes in this data, so let's just replace them.  We'll do this before
+    # even trying a match because it's very low-risk
     lines[0] = lines[0].replace('|', 'l')
+
     match = self.dateTimeRE.match(lines[0])
 
     if not match:
@@ -123,6 +125,11 @@ class pokeocr:
       # "S " and " S" shouldn't appear in legitimate date/time
       lines[0] = lines[0].replace('S ', '5 ', 1)
       lines[0] = lines[0].replace(' S', ' 5', 1)
+
+      # Sometimes spaces get dropped. There's no reason a letter and number
+      # should appear immediately next to each other in a date line
+      lines[0] = re.sub('([0-9])([a-zA-Z])', r'\1 \2', lines[0])
+      lines[0] = re.sub('([a-zA-Z])([0-9])', r'\1 \2', lines[0])
 
       match = self.dateTimeRE.match(lines[0])
 
