@@ -197,6 +197,9 @@ class ExRaidPlugin(Plugin):
           channel.create_overwrite(everyone, deny=PermissionValue(Permissions.READ_MESSAGES))
           for rname in self.config.roles_for_new_channels:
             role = self.getRoleByName(rname, event.guild)
+            if role is None:
+              print 'Warning: role ' + rname + ' does not exist'
+              continue
             channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
         except Exception:
           traceback.print_exc()
