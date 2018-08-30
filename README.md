@@ -153,6 +153,10 @@ Edit config/exraid.json and customize the settings to your liking.
 - **top_left_image** / **bottom_image**: The names of images to use for
   analysis of the invite images.  You shouldn't need to edit these.
 
+Please DO NOT modify exraid.default.json.  That file contains the default
+values of all configuration options and is used if a particular option
+doesn't appear in exraid.json, e.g.  if I add a new option.
+
 ## Running
 
 Once you've configured everything, run the following command from the

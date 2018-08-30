@@ -8,6 +8,7 @@ import datetime
 import re
 import dateutil.parser
 import traceback
+import os
 from fuzzywuzzy import fuzz
 
 import pokeocr
@@ -15,12 +16,27 @@ from pokediscord import pokediscord
 from cv2utils import cv2utils
 
 class ExRaidPluginConfig(Config):
-  pass
+  def loadDefaults(self, config):
+    name = self.__module__.lower()
+    if name.endswith('plugin'):
+      name = name[:-6]
+    if name.startswith('plugins.'):
+      name = name[8:]
+    file = os.path.join(config.plugin_config_dir, name) + '.default.' + config.plugin_config_format
+    try:
+      defaults = self.from_file(file)
+    except IOError:
+      # File doesn't exist
+      return
+    for key, value in defaults.__dict__.iteritems():
+      if not key in self.__dict__:
+        self.key = value
 
 @Plugin.with_config(ExRaidPluginConfig)
 class ExRaidPlugin(Plugin):
   def load(self, ctx):
     super(ExRaidPlugin, self).load(ctx)
+    self.config.loadDefaults(self.bot.config)
     self.topleft = cv2.imread(self.config.top_left_image)
     self.bottom = cv2.imread(self.config.bottom_image)
     self.ocr = pokeocr.pokeocr(self.config.location_regular_expression)

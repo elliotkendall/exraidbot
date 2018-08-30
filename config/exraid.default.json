@@ -1,0 +1,72 @@
+{
+  "comment": "DON'T EDIT THIS FILE. PUT YOUR LOCAL CHANGES IN exraid.json",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  "channels_to_watch": [
+    "#exclusive_raid_meetups"
+  ],
+  "roles_for_new_channels": [
+    "admin",
+    "mod"
+  ],
+  "roles_who_can_reprocess_messages": [
+    "admin",
+    "mod"
+  ],
+  "fuzzy_channel_match_threshold": 97,
+  "location_regular_expression": "(.*). (CA|Ca[lI]ifornia). United S[tk]a[ti]es",
+  "allowed_cities": [
+    "San Francisco",
+    "Belmont",
+    "Burlingame",
+    "Colma",
+    "Daly City",
+    "Foster City",
+    "Half Moon Bay",
+    "Pacifica",
+    "Redwood City",
+    "San Bruno",
+    "San Mateo",
+    "South San Francisco",
+    "Brisbane",
+    "San Carlos"
+  ],
+  "old_channel_grace_days": 3,
+  "include_city_in_channel_names": true,
+  "messages": {
+    "date_in_past": "It looks like that raid already happened, so I'm not going to process it. Please contact an admin if that's incorrect.",
+    "could_not_parse": "Could not determine all the necessary information from the image. Please make sure you're posting an uncropped screenshot of your invitation with no overlays.",
+    "match_not_centered": "That image doesn't look like what I expect. Please make sure you're posting an uncropped screenshot of your invitation with no overlays.",
+    "too_few_lines": "I didn't find all the text I was expecting in that image. Please check that your image includes the full city/state/country location of the raid.",
+    "invalid_city": "The location information that image isn't what I was expecting. Are you sure the raid is local to this area?",
+    "user_already_in_channel": "It looks like you're already in that channel: ",
+    "channel_add_error": "Something went wrong adding you to the channel. Sorry about that.",
+    "channel_create_error": "Something went wrong creating the channel. Sorry about that.",
+    "not_allowed_to_reprocess": "Sorry, you're not allowed to ask me to reprocess this message",
+    "city_not_allowed": "That city isn't covered by this Discord server. We cover these cities: ",
+    "fuzzy_channel": "Your pass seems to be for {}, but I'm assuming that's the same as existing channel {}.",
+    "added_success": "Added you to channel:",
+    "post_add_message": "Added to the channel:"
+  },
+  "top_left_image": "topleft.png",
+  "bottom_image": "bottom.png"
+}
