@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from disco.bot import Bot, Plugin, Config
 from disco.types.permissions import PermissionValue, Permissions
-from disco.types.channel import PermissionOverwriteType
+from disco.types.channel import PermissionOverwriteType, PermissionOverwrite
 
 import cv2
 import datetime
@@ -192,15 +192,20 @@ class ExRaidPlugin(Plugin):
       channel = self.getChannelByName(cname, event.guild.channels)
       if not channel:
         try:
-          channel = category.create_text_channel(cname)
-          everyone = self.getEveryoneRole(event.guild)
-          channel.create_overwrite(everyone, deny=PermissionValue(Permissions.READ_MESSAGES))
+          overwrites = []
           for rname in self.config.roles_for_new_channels:
             role = self.getRoleByName(rname, event.guild)
             if role is None:
               print 'Warning: role ' + rname + ' does not exist'
               continue
-            channel.create_overwrite(role, allow=PermissionValue(Permissions.READ_MESSAGES))
+            overwrites.append(PermissionOverwrite(
+             id = role.id,
+             type = PermissionOverwriteType.ROLE,
+             allow = PermissionValue(Permissions.READ_MESSAGES)))
+
+          channel = category.create_text_channel(cname, permission_overwrites=overwrites)
+          everyone = self.getEveryoneRole(event.guild)
+          channel.create_overwrite(everyone, deny=PermissionValue(Permissions.READ_MESSAGES))
         except Exception:
           traceback.print_exc()
           self.atReply(message, self.config.messages['channel_create_error'])
