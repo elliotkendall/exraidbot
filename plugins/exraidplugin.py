@@ -230,6 +230,10 @@ class ExRaidPlugin(Plugin):
           self.atReply(message, self.config.messages['channel_create_error'])
           continue
 
+        # Post a sticky message to track who's in the channel
+        uic_message = channel.send_message(self.config.messages['users_in_channel_message'])
+        uic_message.pin()
+
         self.alphabetizeChannels(category, event.guild.channels)
 
       # Is the user already in the channel?
@@ -246,6 +250,11 @@ class ExRaidPlugin(Plugin):
         traceback.print_exc()
         self.atReply(message, self.config.messages['channel_add_error'])
         continue
+
+      # Add them to the pinned message
+      for pin in channel.get_pins():
+        if pin.content.startswith(self.config.messages['users_in_channel_message']):
+          pin.edit(pin.content + ' <@' + str(message.author.id) + '>')
 
       # Purge old channels
       self.purgeOldChannels(event.guild.channels)

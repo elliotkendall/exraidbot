@@ -19,6 +19,8 @@ channels next time it runs.
 
 - Announces in the channel when a user has been newly added
 
+- Maintains a pinned message in each channel with a list of added users
+
 - When a user reacts to a message in a monitored channel, processes the
   message as though it were just posted.  This feature is useful for going
   through a backlog of messages from when the bot was offline.  See

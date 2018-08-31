@@ -1,26 +1,4 @@
 {
-  "comment": "DON'T EDIT THIS FILE. PUT YOUR LOCAL CHANGES IN exraid.json",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   "channels_to_watch": [
     "#exclusive_raid_meetups"
   ],
@@ -65,7 +43,8 @@
     "city_not_allowed": "That city isn't covered by this Discord server. We cover these cities: ",
     "fuzzy_channel": "Your pass seems to be for {}, but I'm assuming that's the same as existing channel {}.",
     "added_success": "Added you to channel:",
-    "post_add_message": "Added to the channel:"
+    "post_add_message": "Added to the channel:",
+    "users_in_channel_message": "Users in this channel:"
   },
   "top_left_image": "topleft.png",
   "bottom_image": "bottom.png"
