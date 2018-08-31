@@ -219,9 +219,12 @@ class ExRaidPlugin(Plugin):
              type = PermissionOverwriteType.ROLE,
              allow = PermissionValue(Permissions.READ_MESSAGES)))
 
-          channel = category.create_text_channel(cname, permission_overwrites=overwrites)
           everyone = self.getEveryoneRole(event.guild)
-          channel.create_overwrite(everyone, deny=PermissionValue(Permissions.READ_MESSAGES))
+          overwrites.append(PermissionOverwrite(
+           id = everyone.id,
+           type = PermissionOverwriteType.ROLE,
+           deny = PermissionValue(Permissions.READ_MESSAGES)))
+          channel = category.create_text_channel(cname, permission_overwrites=overwrites)
         except Exception:
           traceback.print_exc()
           self.atReply(message, self.config.messages['channel_create_error'])
