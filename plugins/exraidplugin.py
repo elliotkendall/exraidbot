@@ -83,7 +83,7 @@ class ExRaidPlugin(Plugin):
   @staticmethod
   def getRoleByName(name, guild):
     for id, role in guild.roles.iteritems():
-      if str(role) == name:
+      if role.name == name:
         return role
     return None
 
@@ -132,7 +132,7 @@ class ExRaidPlugin(Plugin):
 
   @Plugin.listen('MessageReactionAdd')
   def on_reaction_add(self, event):
-    if not str(event.channel) in self.config.channels_to_watch:
+    if not '#' + event.channel.name in self.config.channels_to_watch:
       return None
 
     message = event.channel.get_message(event.message_id)
@@ -155,7 +155,7 @@ class ExRaidPlugin(Plugin):
 
   @Plugin.listen('MessageCreate')
   def on_message_create(self, event):
-    if not str(event.channel) in self.config.channels_to_watch:
+    if not '#' + event.channel.name in self.config.channels_to_watch:
       return None
     self.process_message(event)
 
