@@ -159,7 +159,7 @@ class pokeocr:
       # When we're ignoring the city, it's okay for this line to be Get
       # Directions
       gdindex = 2
-    else:
+    elif useCity:
       raise InvalidCityException('City line did not match: ' + lines[2].encode('utf-8'))
 
     match = self.getDirectionsRE.match(lines[gdindex])
