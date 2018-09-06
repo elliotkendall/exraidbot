@@ -56,12 +56,21 @@ class pokeocr:
       if val != True:
         raise MatchNotCenteredException('Bottom template match not centered. Starts at ' + str(b_left) + ', should be ' + str(val))
 
+    # Seek left from bottom left of top left match until we hit non-white
+    # pixels
+    for i in range(tl_left, 0, -1):
+      pixel = image[tl_bottom,i]
+      sum = int(pixel[0]) + int(pixel[1]) + int(pixel[2])
+      if sum < 759:
+        break
+    newleft = i
+
     # Let's assume that the right offset is the same as the left. We could
     # match on a top-right image, but it would tank performance even more.
-    right = width - tl_left
+    right = width - newleft
 
     # Crop the image
-    return image[tl_bottom:b_top,tl_left:right]
+    return image[tl_bottom:b_top,newleft:right]
   
   def scanExRaidImage(self, image, topleft, bottom, useCity=True, debug=False):
     image = self.cropExRaidImage(image, topleft, bottom)
