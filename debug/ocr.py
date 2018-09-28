@@ -32,4 +32,4 @@ if args.language:
 else:
   ocr = pokeocr(config['location_regular_expression'])
 
-print ocr.scanExRaidImage(image, topleft, bottom, debug=True)
+print ocr.scanExRaidImage(image, topleft, bottom, useCity=config['include_city_in_channel_names'], allowOngoing=config['allow_ongoing_raids'], debug=True)

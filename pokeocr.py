@@ -6,6 +6,7 @@ import cv2
 import sys
 import re
 import unicodedata
+import time
 from cv2utils import cv2utils
 
 class InvalidCityException(Exception):
@@ -23,11 +24,15 @@ class MatchNotCenteredException(Exception):
 class TooFewLinesException(Exception):
   pass
 
+class DisallowedOngoingRaidException(Exception):
+  pass
+
 class pokeocr:
   def __init__(self, location_regex):
     self.tool = pyocr.get_available_tools()[0]
     self.lang = self.tool.get_available_languages()[0]
     self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
+    self.ongoingTimeRE = re.compile('^Ongoing ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
     self.cityRE = re.compile(location_regex)
     self.getDirectionsRE = re.compile('Get.*ns')
 
@@ -72,7 +77,7 @@ class pokeocr:
     # Crop the image
     return image[tl_bottom:b_top,newleft:right]
   
-  def scanExRaidImage(self, image, topleft, bottom, useCity=True, debug=False):
+  def scanExRaidImage(self, image, topleft, bottom, useCity=True, allowOngoing=True, debug=False):
     image = self.cropExRaidImage(image, topleft, bottom)
 
     # Scale up, which oddly helps with OCR
@@ -142,19 +147,35 @@ class pokeocr:
 
       match = self.dateTimeRE.match(lines[0])
 
+    # Maybe it's an ongoing raid
+    if not match:
+      match = self.ongoingTimeRE.match(lines[0])
+      if match and not allowOngoing:
+        raise DisallowedOngoingRaidException('This invitation is for an ongoing raid')
+
     # Sometimes we get a leading jibberish line
     if not match:
       del lines[0]
       match = self.dateTimeRE.match(lines[0])
 
     if match:
-      ret.month = match.group(1)
-      ret.day = match.group(2)
+      if len(match.groups()) == 4:
+        # This is a normal invitation with all four fields
+        ret.month = match.group(1)
+        ret.day = match.group(2)
+        beginindex = 3
+        endindex = 4
+      else:
+        # This is for an ongoing raid, so use today for month/day
+        ret.month = time.strftime('%B')
+        ret.day = time.strftime('%d')
+        beginindex = 1
+        endindex = 2
 
       # Sometimes OCR drops the space between the minutes and AM/PM.  Let's
       # just strip all spaces for consistency
-      ret.begin = match.group(3).replace(' ', '')
-      ret.end = match.group(4).replace(' ', '')
+      ret.begin = match.group(beginindex).replace(' ', '')
+      ret.end = match.group(endindex).replace(' ', '')
     else:
       raise InvalidDateTimeException('Date/time line did not match: ' + lines[0].encode('utf-8'))
 

@@ -166,7 +166,7 @@ class ExRaidPlugin(Plugin):
       # Get the info from the image
       try:
         image = cv2utils.urlToImage(value.url)
-        raidInfo = self.ocr.scanExRaidImage(image, self.topleft, self.bottom, useCity=self.config.include_city_in_channel_names)
+        raidInfo = self.ocr.scanExRaidImage(image, self.topleft, self.bottom, useCity=self.config.include_city_in_channel_names, allowOngoing=self.config.allow_ongoing_raids)
         try:
           if raidInfo.city not in self.config.allowed_cities and len(self.config.allowed_cities) > 0:
             self.atReply(message, self.config.messages['city_not_allowed'] + ', '.join(self.config.allowed_cities))
@@ -193,6 +193,10 @@ class ExRaidPlugin(Plugin):
       except pokeocr.InvalidCityException:
         traceback.print_exc()
         self.atReply(message, self.config.messages['invalid_city'])
+        continue
+      except pokeocr.DisallowedOngoingRaidException:
+        traceback.print_exc()
+        self.atReply(message, self.config.messages['ongoing_raids_not_allowed'])
         continue
       except Exception:
         traceback.print_exc()

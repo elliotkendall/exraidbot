@@ -146,6 +146,11 @@ Edit config/exraid.json and customize the settings to your liking.
   the city in the names of channels we create.  If your Discord covers only
   a single city, you may wish to set this to false.
 
+- **allow_ongoing_raids**: Whether or not to process invitations for raids
+  that are currently ongoing. If set to true, the bot will assume that the
+  day/month are the current day. Otherwise it will return an error for
+  such invitations.
+
 - **channel_category**: If set, the bot will place newly created channels
   in this category. If not, it will be named for the day of the raid.
 

@@ -30,6 +30,7 @@
   ],
   "old_channel_grace_days": 3,
   "include_city_in_channel_names": true,
+  "allow_ongoing_raids": true,
   "messages": {
     "date_in_past": "It looks like that raid already happened, so I'm not going to process it. Please contact an admin if that's incorrect.",
     "could_not_parse": "Could not determine all the necessary information from the image. Please make sure you're posting an uncropped screenshot of your invitation with no overlays.",
@@ -44,7 +45,8 @@
     "fuzzy_channel": "Your pass seems to be for {}, but I'm assuming that's the same as existing channel {}.",
     "added_success": "Added you to channel:",
     "post_add_message": "Added to the channel:",
-    "users_in_channel_message": "Users in this channel:"
+    "users_in_channel_message": "Users in this channel:",
+    "ongoing_raids_not_allowed": "That invitation seems to be for a raid that's currently in progress. Probably you should just go there!"
   },
   "top_left_image": "topleft.png",
   "bottom_image": "bottom.png"
