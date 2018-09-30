@@ -10,12 +10,12 @@ channels next time it runs.
 
 - Monitors a configurable list of channels
 
-- Creates categories by date
+- Creates categories by date and optionally city
 
 - Creates channels by date, location name, (optionally) city name, and (for
   non-unique locations) time of day
 
-- Add users to channels
+- Adds users to channels
 
 - Announces in the channel when a user has been newly added
 
@@ -145,6 +145,10 @@ Edit config/exraid.json and customize the settings to your liking.
 - **include_city_in_channel_names**: Whether or not to include the name of
   the city in the names of channels we create.  If your Discord covers only
   a single city, you may wish to set this to false.
+
+- **include_city_in_category_names**: Whether or not to include the name of
+  the city in the names of categories we create.  This can be helpful if
+  you're hitting Discord's limit of 50 channels per category.
 
 - **allow_ongoing_raids**: Whether or not to process invitations for raids
   that are currently ongoing. If set to true, the bot will assume that the

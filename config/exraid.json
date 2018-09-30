@@ -30,6 +30,7 @@
   ],
   "old_channel_grace_days": 3,
   "include_city_in_channel_names": true,
+  "include_city_in_category_names": false,
   "allow_ongoing_raids": true,
   "messages": {
     "date_in_past": "It looks like that raid already happened, so I'm not going to process it. Please contact an admin if that's incorrect.",

@@ -18,13 +18,27 @@ class pokediscord:
       return match.group(1)
     return None
 
-  @staticmethod
-  def generateCategoryName(raidInfo):
+  @classmethod
+  def generateCategoryName(cls, raidInfo, useCity = False):
     date = str(list(calendar.month_name).index(raidInfo.month)) + '-' + raidInfo.day
-    return 'ex_raids_' + date
+    if useCity:
+      return 'ex_raids_' + date + '_' + cls.cityToShortVersion(raidInfo.city)
+    else:
+      return 'ex_raids_' + date
 
   @staticmethod
-  def generateChannelName(raidInfo, useCityName = True):
+  def cityToShortVersion(cname):
+    city = ''
+    # Take the first letter of each word
+    for i in cname.lower().split():
+      city += i[0]
+    # Or if there was only one word, use the whole thing
+    if len(city) == 1:
+      city = cname.lower()
+    return city
+
+  @classmethod
+  def generateChannelName(cls, raidInfo, useCityName = True):
     commonLocations = ['Starbucks', 'Find shiny deals at Sprint']
 
     date = str(list(calendar.month_name).index(raidInfo.month)) + '-' + raidInfo.day
@@ -32,10 +46,7 @@ class pokediscord:
     city = ''
     # It's okay not to have city info if we're not going to use it anyway
     try:
-      for i in raidInfo.city.lower().split():
-        city += i[0]
-      if len(city) == 1:
-        city = raidInfo.city.lower()
+      city = cls.cityToShortVersion(raidInfo.city)
     except AttributeError, e:
       if useCityName:
         raise e
