@@ -42,7 +42,7 @@ with pip:
 You will also need libtesseract with English OCR support.  On a Debian-like
 distribution, you can get those with:
 
-`apt install libtesseract3 tesseract-ocr-eng`
+`apt install libtesseract4 tesseract-ocr-eng`
 
 ### Windows
 
@@ -53,8 +53,8 @@ Make sure to select the "Add python.exe to Path" option.
 In the exraidbot directory, run `pip install -r requirements.txt`
 
 Download and run a tesseract installer from
-https://github.com/UB-Mannheim/tesseract/wiki.  I used
-tesseract-ocr-setup-3.05.01.exe.
+https://github.com/UB-Mannheim/tesseract/wiki.  I most recently tested with
+tesseract-ocr-setup-3.05.01.exe, but try the latest one.
 
 Add the location of the tesseract.exe file to your PATH.  To do that,
 right-click on your computer icon, select properties, and then select
