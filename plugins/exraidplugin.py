@@ -253,7 +253,11 @@ class ExRaidPlugin(Plugin):
 
       # Add the user to the channel
       try:
-        channel.create_overwrite(message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
+        deny=None
+        if self.config.allow_at_everyone:
+          channel.create_overwrite(message.author, allow=PermissionValue(Permissions.READ_MESSAGES))
+        else:
+          channel.create_overwrite(message.author, allow=PermissionValue(Permissions.READ_MESSAGES), deny=PermissionValue(Permissions.MENTION_EVERYONE))
         self.atReply(message, self.config.messages['added_success'] + ' <#' + str(channel.id) + '>')
         channel.send_message(self.config.messages['post_add_message'] + ' <@' + str(message.author.id) + '>')
       except Exception:

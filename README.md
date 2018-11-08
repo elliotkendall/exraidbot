@@ -155,6 +155,9 @@ Edit config/exraid.json and customize the settings to your liking.
   day/month are the current day. Otherwise it will return an error for
   such invitations.
 
+- **allow_at_everyone**: Whether or not to allow users in newly created
+  channels to use @everyone. Defaults to false.
+
 - **channel_category**: If set, the bot will place newly created channels
   in this category. If not, it will be named for the day of the raid.
 
