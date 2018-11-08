@@ -10,6 +10,7 @@ import dateutil.parser
 import traceback
 import os
 from fuzzywuzzy import fuzz
+from string import Template
 
 import pokeocr
 from pokediscord import pokediscord
@@ -235,7 +236,12 @@ class ExRaidPlugin(Plugin):
           continue
 
         # Post a sticky message to track who's in the channel
-        uic_message = channel.send_message(self.config.messages['users_in_channel_message'])
+        raidInfoMessage = Template(self.config.messages['raid_info_channel_message'])
+        uic_message_text = raidInfoMessage.substitute(
+          location=raidInfo.location,
+          month=raidInfo.month, day=raidInfo.day,
+          begin=raidInfo.begin) + '. ' + self.config.messages['users_in_channel_message']
+        uic_message = channel.send_message(uic_message_text)
         uic_message.pin()
 
         self.alphabetizeChannels(category, event.guild.channels)
