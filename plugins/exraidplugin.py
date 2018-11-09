@@ -267,7 +267,7 @@ class ExRaidPlugin(Plugin):
 
       # Add them to the pinned message
       for pin in channel.get_pins():
-        if pin.content.startswith(self.config.messages['users_in_channel_message']):
+        if self.config.messages['users_in_channel_message'] in pin.content:
           pin.edit(pin.content + ' <@' + str(message.author.id) + '>')
 
       # Purge old channels
