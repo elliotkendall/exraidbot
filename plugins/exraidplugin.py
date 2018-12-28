@@ -92,6 +92,13 @@ class ExRaidPlugin(Plugin):
   def dateDiff(datestring):
     begin = dateutil.parser.parse(datestring)
     now = datetime.datetime.today()
+    # There's no year in raid invite images, so we have to handle
+    # year-end wrapping manually
+    if now.month == 12 and begin.month == 1:
+      begin = dateutil.parser.parse(datestring + ' ' + str(now.year + 1))
+    elif now.month == 1 and begin.month == 12:
+      begin = dateutil.parser.parse(datestring + ' ' + str(now.year - 1))
+
     return begin - now
 
   def purgeOldChannels(self, channels):
