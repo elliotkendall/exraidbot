@@ -30,7 +30,11 @@ class DisallowedOngoingRaidException(Exception):
 class pokeocr:
   def __init__(self, location_regex):
     self.tool = pyocr.get_available_tools()[0]
-    self.lang = self.tool.get_available_languages()[0]
+    for lang in self.tool.get_available_languages():
+      if lang == 'osd':
+        continue
+      self.lang = lang
+      break
     self.dateTimeRE = re.compile('^([A-Z][a-z]+) ?([0-9]{1,2}) ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
     self.ongoingTimeRE = re.compile('^Ongoing ([0-9]{1,2}:[0-9]{2} ?[AP]M) .+ ([0-9]{1,2}:[0-9]{2} ?[AP]M)')
     self.cityRE = re.compile(location_regex)
