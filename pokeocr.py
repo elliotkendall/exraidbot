@@ -159,6 +159,7 @@ class pokeocr:
 
     # Sometimes we get a leading jibberish line
     if not match:
+      oldline = lines[0]
       del lines[0]
       match = self.dateTimeRE.match(lines[0])
 
@@ -181,7 +182,7 @@ class pokeocr:
       ret.begin = match.group(beginindex).replace(' ', '')
       ret.end = match.group(endindex).replace(' ', '')
     else:
-      raise InvalidDateTimeException('Date/time line did not match: ' + lines[0].encode('utf-8'))
+      raise InvalidDateTimeException('Date/time line did not match: ' + oldline.encode('utf-8'))
 
     ret.location = lines[1]
 
