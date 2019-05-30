@@ -185,7 +185,7 @@ class ExRaidPlugin(Plugin):
         if self.dateDiff(raidInfo.month + '-' + raidInfo.day + ' ' + raidInfo.begin).days < 0:
           self.atReply(message, self.config.messages['date_in_past'])
           continue
-        cname = pokediscord.generateChannelName(raidInfo, self.config.include_city_in_channel_names)
+        cname = pokediscord.generateChannelName(raidInfo, self.config.common_locations, self.config.include_city_in_channel_names)
         try:
           catname = self.config.channel_category
         except AttributeError:
