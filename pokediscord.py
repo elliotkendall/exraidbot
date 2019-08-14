@@ -38,9 +38,7 @@ class pokediscord:
     return city
 
   @classmethod
-  def generateChannelName(cls, raidInfo, useCityName = True):
-    commonLocations = ['Starbucks', 'Find shiny deals at Sprint', 'Sprint Store']
-
+  def generateChannelName(cls, raidInfo, commonLocations, useCityName = True):
     date = str(list(calendar.month_name).index(raidInfo.month)) + '-' + raidInfo.day
 
     city = ''
