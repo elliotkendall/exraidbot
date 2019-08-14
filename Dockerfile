@@ -5,7 +5,7 @@ ARG uid=1000
 ARG gid=1000
 ARG EXRAIDBOT_HOME=/opt/exraidbot
 
-RUN apt-get update && apt-get -y install libtesseract3 tesseract-ocr-eng
+RUN apt-get update && apt-get -y install libtesseract4 tesseract-ocr-eng
 RUN pip install opencv-python-headless numpy imutils python-dateutil pyocr disco-py fuzzywuzzy
 
 RUN mkdir -p $EXRAIDBOT_HOME/plugins \
