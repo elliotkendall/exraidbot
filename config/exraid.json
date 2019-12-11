@@ -10,7 +10,6 @@
     "admin",
     "mod"
   ],
-  "fuzzy_channel_match_threshold": 97,
   "location_regular_expression": "(.*). (CA|Ca[lI]ifornia). United S[tk]a[ti]es",
   "allowed_cities": [
     "San Francisco",

@@ -9,7 +9,6 @@ import re
 import dateutil.parser
 import traceback
 import os
-from fuzzywuzzy import fuzz
 from string import Template
 
 import pokeocr
